@@ -55,8 +55,8 @@ function write_message_to_database($headers, $body, $folder = 0, $save_override 
 	}
 	
 	$msg = new email_message($headers, $body);
-	$headers = $msg->export_headers();
-	$body = $msg->export_body();
+	//$headers = $msg->export_headers();
+	//$body = $msg->export_body();
 	$length = strlen($body);
 	
 	$query = "INSERT INTO `email` 
