@@ -1,0 +1,359 @@
+body, td, .button_as_link {
+	margin: 0;
+	font-family: arial, sans-serif;
+	font-size: 10pt;
+}
+
+.button_as_link {
+	border-width: 0;
+	background-color: #ffffff;
+	padding: 0;
+	font-weight: bold;
+	color: #0000ff;
+	text-decoration: underline;
+	width: auto;
+	cursor: hand;
+}
+
+td {
+	text-align: left;
+	vertical-align: middle;
+}
+
+form {
+	margin: 0;
+	display: inline;
+}
+
+textarea {
+	font-family: arial, sans-serif;
+	font-size: 10pt;
+}
+
+img {
+	border: 0;
+}
+
+abbr {
+	text-decoration: none;
+}
+
+a:visited {
+	color: #000000;
+}
+
+#options_nav {
+	text-align: center;
+	padding: 3px;
+	font-weight: bold;
+}
+
+#options_nav a {
+	text-decoration: none;
+}
+
+#foldertable {
+	width: 90%;
+	margin: 3%;
+	padding: 0;
+	background-color: #000000;
+}
+
+#nav {
+	padding: 5px;
+	background-color: #eeeef8;
+	border-color: #aaaadd; 
+	border-width: 0px 0px 1px 0px;
+	border-style: solid;
+}
+
+#messages {
+}
+
+#messagebody {
+	padding: 10px; 
+}
+
+#foldertype {
+	padding: 4px;
+	background-color: #eeeef8;
+	border-color: #aaaadd;
+	border-width: 1px;
+	border-style: solid;
+	color: #000000;
+	text-align: center;
+}
+
+#foldertype a:visited {
+	color: #0000ff;
+}
+
+#folders {
+	background-color: #ffffff;
+}
+
+#metamessage {
+	border-style: solid; 
+	border-color: #000000; 
+	border-width: 0px 0px 1px 0px; 
+	margin: 0; 
+	width: auto; 
+	height: 35px; 
+	padding: 4px 4px 4px 4px; 
+	background-color: #dddddd; 
+	color: #000000; 
+	font-size: 8pt; 
+	font-family: arial, sans-serif;
+	overflow: auto;
+}
+
+#attachment {
+	float: right;
+	margin: 3px 3px 0px 0px;
+	max-width: 50%;
+}
+
+#compose {
+}
+
+#login {
+	background-color: #eeeef8;
+	border-color: #aaaadd;
+	border-width: 1px;
+	border-style: solid;
+	padding: 10px;
+	text-align: center;
+}
+
+#mascot {
+	border-color: #aaaadd;
+	border-width: 1px;
+	border-style: solid;
+}
+
+a.unseen {
+	color: #000000;
+	font-weight: bold;
+}
+
+a.seen, a.unseen:visited, a.unseen:active {
+	color: #000000;
+	font-weight: normal;
+}
+
+input.nav {
+	text-align: center;
+	vertical-align: middle;
+	padding: 2px;
+	border-style: solid; 
+	border-color: #000000; 
+	border-width: 1px;
+	background-color: #dedede;
+}
+
+table.nested {
+	background-color: #000000;
+	width: 95%;
+	border: 0;
+	margin: 1%;
+}
+
+.checkbox {
+	width: 2%;
+	padding: 1px 2px 1px 1px;
+}
+
+.from {
+	width: 20%;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.to {
+	width: 20%;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.attachment {
+	width: 2%;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.subject {
+	width: 35%;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.date {
+	width: 5%;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.row2 td, .emailrow2 td {
+	background-color: #ffffff;
+}
+
+.row1, .row1 td {
+	background-color: #eeeef8;
+}
+
+.row_selected td {
+	background-color: rgb(61,128,223);
+}
+
+.row_selected, .row_selected a {
+	color: #ffffff;
+}
+
+.row_unselected td {
+	background-color: #ffffff;
+}
+
+.row1,
+.row1 td, 
+.row2, 
+.row2 td, 
+.rowfriend, 
+.rowfriend td, 
+.row_selected, 
+.row_unselected,
+.row_selected td, 
+.row_unselected td,
+.date_header,
+.date_header td {
+	border-color: #aaaadd; 
+	border-width: 0px 0px 1px 0px;
+	border-style: solid;
+}
+
+.date_header td {
+	background-color: #eeeeee;
+	color: #000000;
+}
+
+
+.attachment_image {
+	padding: 0px 3px 0px 3px;
+	text-decoration: none;
+}
+
+.attachment_number {
+	position: relative;
+	top: -12px;
+	left: -12px;
+	font-family: arial, sans-serif;
+	font-size: 8px;
+	color: #333333;
+	text-decoration: none;
+}
+
+.html_link {
+	position: relative;
+	top: -12px;
+	left: -19px;
+	font-family: arial, sans-serif;
+	font-size: 8px;
+	color: #333333;
+	text-decoration: none;
+}
+
+.text_link {
+	position: relative;
+	top: -12px;
+	left: -17px;
+	font-family: arial, sans-serif;
+	font-size: 8px;
+	color: #333333;
+	text-decoration: none;
+}
+
+.formlabel {
+	text-align: left;
+	font-weight: bold;
+	vertical-align: middle;
+}
+
+.forminput {
+	text-align: left;
+	vertical-align: middle;
+}
+
+.settingsrow_head {
+	font-size: 10pt;
+	font-weight: bold;
+	background-color: #cccccc;
+}
+
+.settingsrow1 {
+	background-color: #dddddd;
+	font-size: 8pt;
+}
+
+.settingsrow2 {
+	background-color: #eeeeee;
+	font-size: 8pt;
+}
+
+.settingsrow1 td, .settingsrow2 td, .settingsrow_head td {
+	font-size: 8pt;
+	padding: 3px;
+}
+
+.text_button {
+	height: 100%;
+	width: 64px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #000000;
+	background-color: #ffffff;
+	color: #000000;
+}
+
+.image_submit {
+	width: 64px;
+	border: 1px solid #000000;
+	background-color: #ffffff;
+	background-repeat: no-repeat;
+	background-position: top center;
+	font-size: 11px;
+	font-family: arial;
+	padding-top: 55px;
+	padding-bottom: 0px;
+	margin-bottom: 5px;
+	cursor: hand;
+	text-align: center;
+}
+
+#folderlist span {
+	white-space: nowrap;
+	display: block;
+}
+
+#folderlist a {
+	text-decoration: none;
+}
+
+.folder_selected {
+	background-color: rgb(61,128,223);
+	color: #ffffff;
+}
+
+.folder_selected a {
+	color: #ffffff;
+	text-decoration: none;	
+}
+
+.folder_unselected {
+	background-color: #ffffff;
+	color: #000000;
+}
+
+.folder_unselected a {
+	text-decoration: none;
+	color: #000000;
+}
+
