@@ -5,7 +5,6 @@ class email_message {
 	var $is_multipart = false;
 	var $boundary;
 	var $parts = array();
-	var $body;
 	var $has_html = false;
 	var $num_attachments = 0;
 	
@@ -179,8 +178,6 @@ class email_message {
 	}
 	
 	function export_text_body(){
-		$body = $this->body;
-		
 		if ($this->is_multipart){
 			foreach($this->parts as $part){
 				if (($part->content_type == "text") && ($part->content_subtype == "plain")){
@@ -198,17 +195,19 @@ class email_message {
 	
 	function export_html_body(){
 		if (!$this->is_multipart){
-			return $this->body;
+			$body = $this->parts[0]->data;
 		}
 		else{
 			foreach($this->parts as $part){
 				if (($part->content_type == "text") && ($part->content_subtype == "html")){
-					return $part->data;
+					$body = $part->data;
 				}
 			}
 			
-			return $this->body;
+			$body = $this->parts[0]->data;
 		}
+		
+		return $body;
 	}
 }
 
