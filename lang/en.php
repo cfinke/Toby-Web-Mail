@@ -22,12 +22,15 @@
 // where 'Direcciones' is the Spanish equivalent to the English word "Addresses."
 // (This may or may not be correct.  I only have a basic understanding of Spanish.
 //
+// Note: any apostrophes ("'") should be written as "\'" to avoid syntax errors in the code.
+// ie. the phrase "John's mail" should be written as "John\'s mail".
+//
 // If you would like to help in the translation of Toby, feel free to e-mail a 
 // translated version of this file to chris@efinke.com, or contact chris@efinke.com
 // for more information.  (You may wish to e-mail before doing any work on it,
 // because someone else may already be translating to your language.)
 
-// Do not change this line.  I'm serious.
+// Do not change this line.
 error_reporting(E_ALL ^ E_NOTICE);
 
 // ################################################################################################### //
@@ -382,5 +385,29 @@ define('ON','on');
 define('AT','at');
 define('IN_THE_FILE','in the file');
 define('ON_LINE','on line');
+
+// New: 2004-05-23
+
+// Context: "What is this" image representing"?"
+define('WHAT_IS_THIS','What is this?');
+
+// The following lines are the content for the "What is this?" file for thread arcs.  They should be self-explanatory.
+define('WHAT_P1','This graphic is called a thread arc.  It is a graphical representation of an e-mail conversation.  Each circle represents a message in the conversation, with the circles being drawn in chronological order. (The oldest messages are the first circles; the newest messages are the last circles.) Solid circles represent received messages, and hollow circles represent sent messages.  Unread messages are drawn in black, and the message currently being read is drawn larger, in a lighter color.  Each line connecting two circles represents a reply. The connections between the message currently being read and its parent (the message to which it was a reply) and its children (any replies to it) are also drawn in the same lighter color.');
+define('WHAT_P2','This type of visualization is extremely useful; it provides instant access to each message in the conversation while maintaining a compact profile.  It also provides you, the user, with information about the growth of the thread, the relative time between replies, and the number of participants.');
+define('WHAT_P3','For example, here is some of the information we can glean from a thread arc about the thread itself:');
+define('WHAT_L1','There are a total of 12 messages.');
+define('WHAT_L2','Seven of the messages having been sent by the user to which the arc belongs.');
+define('WHAT_L3','This user started the thread, since the first circle is hollow.');
+define('WHAT_L4','All of the messages in the thread have been viewed, except for the very last.');
+define('WHAT_L5','The user is currently viewing the ninth message in the thread.');
+define('WHAT_L6','Three of the messages (the 2nd, 3rd, and 9th) have received two replies, ten, eleven, and twelve have received no replies, and the rest have received one.');
+define('WHAT_L7','Messages two and eight received replies relatively long after they were sent, as evidenced by the wider arcs.');
+
+// The following four lines make up one phrase, and should be translated as one sentence.  They
+// are split up because some of the words are used as links.
+define('WHAT_P4_1','For more information on thread arcs, see the IBM Research Group\'s');
+define('WHAT_P4_2','Remail website');
+define('WHAT_P4_3','and their');
+define('WHAT_P4_4','study on thread arcs and usability.');
 
 ?>

@@ -188,4 +188,26 @@ define('TIMEZONE','Zona de Tiempo');
 
 define('MAIL_REFRESH_QUESTION','¿Debe la comprobación para de Toby nuevo enviar cada __ minutos? (introduzca 0 para inhabilitar.)');
 
+// Context: "What is this" image representing"?"
+define('WHAT_IS_THIS','¿Cuál es éste?');
+
+// The following lines are the content for the "What is this?" file for thread arcs.  They should be self-explanatory.
+define('WHAT_P1','Este gráfico se llama un arco del hilo de rosca. Es una representación gráfica de una conversación del E-mail. Cada círculo representa un mensaje en la conversación, con los círculos que son dibujados en orden cronológica. (los más viejos mensajes son los primeros círculos; los más nuevos mensajes son los círculos pasados.) Los círculos sólidos representan mensajes recibidos, y los círculos del hueco representan mensajes enviados. Los mensajes de Unread se dibujan en negro, y el mensaje que es leído actualmente es más grande dibujado, en un color más ligero. Cada línea que conecta dos círculos representa una contestación. Las conexiones entre el mensaje que es leído actualmente y su padre (el mensaje a los cuales era una contestación) y sus niños (cualquieres contestaciones ella) también se dibujan en el mismo color más ligero.');
+define('WHAT_P2','Este tipo de visualización es extremadamente útil; proporciona el acceso inmediato a cada mensaje en la conversación mientras que mantiene un perfil compacto. También provee de usted, del usuario, la información sobre el crecimiento del hilo de rosca, el tiempo relativo entre las contestaciones, y el número de participantes.');
+define('WHAT_P3','Por ejemplo, aquí está algo de la información que podemos espigar de un arco sobre el hilo de rosca sí mismo del hilo de rosca:');
+define('WHAT_L1','Hay un total de 12 mensajes.');
+define('WHAT_L2','Siete de los mensajes que son enviados por el usuario a quien el arco pertenece.');
+define('WHAT_L3','Este usuario comenzó el hilo de rosca, puesto que el primer círculo es hueco.');
+define('WHAT_L4','Todos los mensajes en el hilo de rosca se han visto, a excepción del último.');
+define('WHAT_L5','El usuario está viendo actualmente el noveno mensaje en el hilo de rosca.');
+define('WHAT_L6','Tres de los mensajes (los 2dos, 3ro, y 9nos) han recibido dos contestaciones, diez, once, y doce no han recibido ninguna contestación, y el resto han recibido uno.');
+define('WHAT_L7','Mensajes dos y ocho contestaciones recibidas relativamente de largo después de que fueran enviados, según lo evidenciado por los arcos más anchos.');
+
+// The following four lines make up one phrase, and should be translated as one sentence.  They
+// are split up because some of the words are used as links.
+define('WHAT_P4_1','Para más información sobre arcos del hilo de rosca, vea que la IBM Research Group\'s');
+define('WHAT_P4_2','Remail Web site');
+define('WHAT_P4_3','y su');
+define('WHAT_P4_4','estudio por correo en arcos y utilidad del hilo de rosca.');
+
 ?>
