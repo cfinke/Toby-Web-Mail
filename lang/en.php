@@ -264,7 +264,6 @@ define('NAVIGATION','Navigation');
 define('DISABLED','Disabled');
 define('OPTIONS','Settings');
 define('DELETE_STRING','Delete');
-define('TRANSFER_EMAIL','Transfer E-mail');
 define('UPLOAD_MESSAGES','Upload Messages');
 define('CHANGE_MAIN_SETTINGS','Change Toby Settings');
 define('REAL_NAME','Real name');
