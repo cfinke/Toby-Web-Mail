@@ -15,6 +15,7 @@ if (isset($_REQUEST["id"])){
 	}
 	else{
 		$message = get_message_to_view($_REQUEST["id"], $_REQUEST["action"]);
+		$message_thread = new email_thread($_REQUEST["id"]);
 	}
 }
 else{
@@ -36,11 +37,13 @@ $output = '
 			</div>
 			<div id="messagebody">
 				'.$message["body"].'
+				'.$message_thread->thread_nav.'
 			</div>
 		</body>
 	</html>';
 
 echo $output;
+//print_r($message_thread);
 exit;
 
 function get_message_to_view($id, $action){
