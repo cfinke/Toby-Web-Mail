@@ -239,11 +239,14 @@ class message_part {
 		}
 		else{
 			if (stristr($part_data,"Content-Type") !== false){
-				$this->content_type = explode("Content-Type:",$part_data,2);
-				$this->content_type = $this->content_type[1];
+				$this->content_type = $this->parsed_headers["Content-Type"];
 				
-				if (strstr($this->content_type, ";")){
+				if (strstr($this->content_type, ";") !== false){
 					$this->content_type = explode(";",$this->content_type, 2);
+					$this->content_type = trim(str_replace('"',"",$this->content_type[0]));
+				}
+				else{
+					$this->content_type = explode("\n",$this->content_type, 2);
 					$this->content_type = trim(str_replace('"',"",$this->content_type[0]));
 				}
 					
@@ -253,10 +256,12 @@ class message_part {
 			}
 			
 			if (stristr($part_data,"Content-Disposition") !== false){
-				$this->content_disposition = explode("Content-Disposition:",$part_data,2);
-				$this->content_disposition = $this->content_disposition[1];
-				$this->content_disposition = explode(";",$this->content_disposition, 2);
-				$this->content_disposition = strtolower(trim(str_replace('"',"",$this->content_disposition[0])));
+				$this->content_disposition = $this->parsed_headers["Content-Disposition"];
+				
+				if (strstr($this->content_disposition,";") !== false){
+					$this->content_disposition = explode(";",$this->content_disposition, 2);
+					$this->content_disposition = strtolower(trim(str_replace('"',"",$this->content_disposition[0])));
+				}
 			}
 			
 			if (stristr($part_data,"Content-Transfer-Encoding") !== false){
