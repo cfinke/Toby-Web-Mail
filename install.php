@@ -54,10 +54,6 @@ if ($_REQUEST["action"] == "install"){
 		}
 	}
 	
-	if (!is_writeable($path)){
-		$errors[] = "The directory ". $path . " is not currently writable by the server.  Please change the permissions.<br />";
-	}
-	
 	if (count($errors) == 0){
 		$writetoconfig = '<?php
 
@@ -85,7 +81,17 @@ else{
 			fclose($handle);
 		}
 		else{
-			$errors[] = "Toby could not write the config.php file.  If this file exists already, delete it.";
+			chmod($path . "config.php", 0666);
+			
+			$handle = @fopen($path . "config.php","w");
+
+			if ($handle){
+				fwrite($handle, $writetoconfig);
+				fclose($handle);
+			}
+			else{
+				$errors[] = "Toby could not write the config.php file.  If this file exists already, delete it.";
+			}
 		}
 	}
 	
