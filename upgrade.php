@@ -42,7 +42,7 @@ $output = '
 		</head>
 		<body style="margin: 0; padding: 0;">
 			<form action="'.$_SERVER["PHP_SELF"].'" method="post">
-				<h1>Install Toby Web Mail</h1>';
+				<h1>Upgrade Toby Web Mail</h1>';
 
 foreach($_REQUEST as $key => $value) $_REQUEST[$key] = stripslashes($value);
 
