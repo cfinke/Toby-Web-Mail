@@ -82,7 +82,7 @@ if ($_REQUEST["action"] == "upgrade"){
 			$errors[] = 'Toby connected to the MySQL host, but could not find the database '.$_REQUEST["database_name"].'.';
 		}
 	}
-
+	
 	// Make the appropriate changes, depending on the old version.	
 	if (count($errors) == 0){
 		mysql_connect($_REQUEST["mysql_host"],$_REQUEST["database_user"],$_REQUEST["database_password"]);
@@ -112,7 +112,8 @@ if ($_REQUEST["action"] == "upgrade"){
 				$query = "ALTER TABLE `email_users` ADD `compose_type` ENUM( 'text', 'html' ) DEFAULT 'text' NOT NULL";
 				$result = @mysql_query($query);
 			case '0.3.0':
-				## Changes introduced in 0.3.1	
+				## Changes introduced in 0.3.1
+				
 				$query = "ALTER TABLE `email` DROP `Mime-Version`";
 				$result = @mysql_query($query);
 				
@@ -131,10 +132,10 @@ if ($_REQUEST["action"] == "upgrade"){
 				$query = "ALTER TABLE `email` CHANGE `folder` `folder` INT NOT NULL";
 				$result = @mysql_query($query);
 			case '0.3.1':
-				## Changes introduced in 0.4	
+				## Changes introduced in 0.4
+				
 				$query = "ALTER TABLE `email_users` ADD `lang` VARCHAR( 8 ) DEFAULT 'en' NOT NULL";
-				$result = @mysql_query($query);		
-
+				$result = @mysql_query($query);
 			case '0.4':
 				## Changes introduced in 0.4.1
 				$query = "ALTER TABLE `email` DROP INDEX `Content-Type`";
@@ -157,7 +158,15 @@ if ($_REQUEST["action"] == "upgrade"){
 				$result = @mysql_query($query);
 				
 				$query = "ALTER TABLE `email_users` ADD `refresh_interval` VARCHAR(4) DEFAULT '10' NOT NULL";
-				$result = mysql_query($query);
+				$result = @mysql_query($query);
+			case '0.4.2':
+				## Changes introduced in 0.4.3
+				
+				$query = "ALTER TABLE `email` ADD INDEX ( `Message-ID` ) ";
+				$result = @mysql_query($query);
+				
+				$query = "ALTER TABLE `email` ADD INDEX ( `In-Reply-To` ) ";
+				$result = @mysql_query($query);
 				
 				// Attempt to write the config file.
 				@chmod($path."config.php", 0777);
@@ -290,7 +299,8 @@ elseif(!$set_config_error){
 							<td>From which version of Toby Web Mail are you upgrading?  (If you don\'t know, select 0.1.)</td>
 							<td>
 								<select name="old_version">
-									<option value="0.4">0.4.1</option>
+									<option value="0.4.2">0.4.2</option>
+									<option value="0.4.1">0.4.1</option>
 									<option value="0.4">0.4</option>
 									<option value="0.3.1">0.3.1</option>
 									<option value="0.3">0.3</option>
