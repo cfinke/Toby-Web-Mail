@@ -13,13 +13,13 @@
 // These are keywords used by Toby to reference the translated phrases. For
 // example, to translate the line
 //
-// define('Adresse_BOOK','Adressees');
+// define('ADDRESS_BOOK','Adressees');
 //
 // into Spanish, you might change it to
 //
-// define('Adresse_BOOK','Direcciones');
+// define('ADDRESS_BOOK','Direcciones');
 //
-// where 'Direcciones' is the Spanish equivalent to the English word "Adressees."
+// where 'Direcciones' is the Spanish equivalent to the English word "Addresses."
 // (This may or may not be correct.  I only have a basic understanding of Spanish.
 //
 // Note: any apostrophes ("'") should be written as "'" to avoid syntax errors in the code.
@@ -38,10 +38,10 @@ error_reporting(E_ALL ^ E_NOTICE);
 // ################################################################################################### //
 
 // Months of the Year, pretty self-explanatory
-$months =" array(1=">"Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember");
+$months = array(1=>"Januar","Februar","Marz","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember");
 
-// Context: "Adressees" or "Adresse Book"
-define('Adresse_BOOK','Adressen');
+// Context: "Adresses" or "Adresse Book"
+define('ADDRESS_BOOK','Adressen');
 
 // Context: "Log in" to Toby Web Mail
 define('LOG_IN','Login');
@@ -68,7 +68,7 @@ define('HTML_MODE','HTML modus');
 define('SEND','Senden');
 
 // Context: "Get the messages" in the specified folder as a zip file
-define('GET_MESSAGES','ausgewählte Nachrichten downloaden');
+define('GET_MESSAGES','ausgewahlte Nachrichten downloaden');
 
 // Context: "Download messages" as a zip file
 define('DOWNLOAD_MESSAGES','Nachriten downloaden');
@@ -77,16 +77,16 @@ define('DOWNLOAD_MESSAGES','Nachriten downloaden');
 define('INBOX','Posteingang');
 
 // Context: Deleted messages are stored in the "Trash"
-define('TRASH','Mülleimer');
+define('TRASH','Mulleimer');
 
 // Context: To permanently remove messages in the trash, "Empty" it.
 define('EMPTY_TRASH','leeren');
 
 // Context: I would like to "Add a Folder" to store messages in
-define('ADD_FOLDER','Ordner hinzufügen');
+define('ADD_FOLDER','Ordner hinzufugen');
 
 // Context: "Delete the Folder" that I have specified
-define('DELETE_FOLDER','Ordner löschen');
+define('DELETE_FOLDER','Ordner loschen');
 
 // Context: "Move the Folder" that I have specified into another folder.
 define('MOVE_FOLDER','Ordner verschieben');
@@ -104,22 +104,22 @@ define('CONTINUE_BUTTON','Fortsetzen');
 define('PASSWORD','Passwort');
 
 // Context: "Add an Adresse" to the Adresse book
-define('ADD_AN_Adresse','Eine Adresse hinzufügen');
+define('ADD_AN_ADDRESS','Eine Adresse hinzufugen');
 
 // Context: What is the "name" of the person?
 define('NAME','Name');
 
 // Context: What is the "e-mail Adresse" of the person?
-define('EMAIL_Adresse','E-mail Adresse');
+define('EMAIL_ADDRESS','E-mail Adresse');
 
 // Context: "Add this Adresse" to the Adresse book
-define('ADD_Adresse','Adresse hinzufügen');
+define('ADD_ADDRESS','Adresse hinzufugen');
 
 // Context: "Update this Adresse" in the Adresse book.
-define('UPDATE_Adresse','Adresse aktuallisieren');
+define('UPDATE_ADDRESS','Adresse aktuallisieren');
 
 // Context: "Delete the Adressees" that I have selected
-define('DELETE_SELECTED_AdresseES','Ausgewählte Adresse(n) löschen');
+define('DELETE_SELECTED_ADDRESSES','Ausgewahlte Adresse(n) loschen');
 
 // Context: This file is an "attachment" to this e-mail.
 define('ATTACHMENT','Anlage');
@@ -128,16 +128,16 @@ define('ATTACHMENT','Anlage');
 define('ATTACHMENTS','Anlagen');
 
 // Context: I wish to "Add an Attachment" to this e-mail
-define('ADD_ATTACHMENT','Anlage hinzufügen');
+define('ADD_ATTACHMENT','Anlage hinzufugen');
 
 // Context: Please "attach the file" that I have selecetd.
-define('ATTACH_FILE','Datein anhängen');
+define('ATTACH_FILE','Datein anhangen');
 
 // Context: the "name of this file" is abc.txt.
 define('FILENAME','Dateiname');
 
 // Context: the "size of this file" is 48 KB.
-define('SIZE','Größe');
+define('SIZE','Grosse');
 
 // Context: the "type of this file" is text/plain.
 define('TYPE','Art');
@@ -146,10 +146,10 @@ define('TYPE','Art');
 define('KILOBYTES_UNIT','KB');
 
 // Context: "Delete the attachments" that I have selected.
-define('DELETE_SELECTED_ATTACHMENTS','Ausgewählte Anlage(n) löschen');
+define('DELETE_SELECTED_ATTACHMENTS','Ausgewahlte Anlage(n) loschen');
 
 // Context: I would like to go "back to the message" that I am composing.
-define('BACK_TO_MESSAGE','Zurück zur Nachricht');
+define('BACK_TO_MESSAGE','Zuruck zur Nachricht');
 
 // Context: On this screen, you can "manage the attachments" that you have added.
 define('MANAGE_ATTACHMENTS','Anlagen verwalten');
@@ -212,7 +212,7 @@ define('VIEW_BY','Sortiert nach');
 define('SENDER','Absender');
 
 // Context: The "recipient" of the message.
-define('RECEIVER','Empfänger');
+define('RECEIVER','Empfanger');
 
 // Context: What "date" the message was received on.
 define('DATE_STRING','Datum');
@@ -221,7 +221,7 @@ define('DATE_STRING','Datum');
 define('UPLOAD_EMAIL','E-mail Datei hochladen');
 
 // Context: I would like to "transfer the e-mail" in the folder I have selected.
-define('TRANSFER_EMAIL','E-mail übertragen');
+define('TRANSFER_EMAIL','E-mail ubertragen');
 
 // Context: I would like to "cancel the transfer" that I have selected.
 define('CANCEL_TRANSFER','Transfer abbrechen');
@@ -233,14 +233,14 @@ define('RETRIEVE_EMAIL','E-mail abfragen');
 define('DECLINE','Ablehnen');
 
 // Context: the following are used to say 'Toby "successfully transfered # messages."'
-define('TRANSFER_SUCCESS_BEGIN','Erfolgreich übertragen');
+define('TRANSFER_SUCCESS_BEGIN','Erfolgreich ubertragen');
 define('TRANSFER_SUCCESS_END','Nachricht(en).');
 
 // Context: Would you like to add any "comments" to this message?
 define('COMMENTS','Kommentare');
 
 // Context: the "e-mail Adresse of the recipient" is abc@efg.com
-define('DESTINATION_Adresse','E-mail ziel Adresse');
+define('DESTINATION_ADDRESS','E-mail ziel Adresse');
 
 // Context: In what "language" would you like to use Toby?
 define('LANGUAGE','Sprache');
@@ -249,19 +249,19 @@ define('LANGUAGE','Sprache');
 define('FOLDER_SETTINGS','Ordner Optionen');
 
 // Context: I would like to "add this folder under" another folder.
-define('ADD_UNDER','Hinzufügen unter...');
+define('ADD_UNDER','Hinzufugen unter...');
 
 // Context: Please "select the folder you would like to rename."
-define('SELECT_RENAME_FOLDER','Wähle den Ordner den du umbenennen willst');
+define('SELECT_RENAME_FOLDER','Wahle den Ordner den du umbenennen willst');
 
 // Context: Please "select the folder you would like to move."
-define('SELECT_MOVE_FOLDER','Wähle den Ordner den du verschieben willst');
+define('SELECT_MOVE_FOLDER','Wahle den Ordner den du verschieben willst');
 
 // Context: Please "select a new location" for this folder.
-define('SELECT_NEW_LOCATION','Wähle eine neuen Ort');
+define('SELECT_NEW_LOCATION','Wahle eine neuen Ort');
 
 // Context: Please "select the folder you would like to delete."
-define('SELECT_DELETE_FOLDER','Wähle den Ordner den du löschen willst');
+define('SELECT_DELETE_FOLDER','Wahle den Ordner den du loschen willst');
 
 // Context: When I delete this folder, I would like to "delete the messages inside this folder."
 define('DELETE_MESSAGES_IN_FOLDER','Delete messages inside folder');
@@ -306,13 +306,13 @@ define('NAVIGATION','Navigation');
 define('OPTIONS','Optionen');
 
 // Context: I would like to "delete" this message.
-define('DELETE_STRING','Löschen');
+define('DELETE_STRING','Loschen');
 
 // Context: I would like to "upload messages" to Toby.
 define('UPLOAD_MESSAGES','Nachricht hochladen');
 
 // Context: I would like to "change the settings of Toby."
-define('CHANGE_MAIN_SETTINGS','Toby Optionen ändern');
+define('CHANGE_MAIN_SETTINGS','Toby Optionen andern');
 
 // Context: My "real name" is John Smith.
 define('REAL_NAME','Echter Name');
@@ -344,43 +344,43 @@ define('TIMEZONE','Zeitzone');
 
 // The context of the following phrases should be obvious.
 define('FIRST_LOGIN_INTRO','Dies scheint ihr erster login bei '.APP_TITLE.' auf diesem Server zu sein. Bitte nimm dir einen moment zeit um deinen Akkount zu konfigurieren.');
-define('FULL_NAME_QUESTION','Wie ist dein Vollständiger Name (Wie er bei versendeten Emails angezeigt werden soll)?');
+define('FULL_NAME_QUESTION','Wie ist dein Vollstandiger Name (Wie er bei versendeten Emails angezeigt werden soll)?');
 define('MAIL_HOST_QUESTION','Url deines e-mail servers?');
 define('SAVE_SENT_QUESTION','Soll Toby eine kopie deiner versendeten E-mails speichern?');
 define('SAVE_INCOMING_QUESTION','Soll Toby bei jedem login dein E-mail Nachrichten auf dem Server speichern?');
-define('SAVE_INCOMING_CAUTION','Achtung: Ja löscht alle herruntergladenen Nachrichten von deinem E-mail Server.');
+define('SAVE_INCOMING_CAUTION','Achtung: Ja loscht alle herruntergladenen Nachrichten von deinem E-mail Server.');
 define('YES','Ja');
 define('NO','Nein');
 define('STAY_LOGGED_IN','Lass mich eingeloggt.');
 define('ENTER_HTML_CODE','Gib einigen HTML code hier ein:');
-define('TRANSFER_INSTR','Um Nachrichten zwischen zwei E-mail Addressen die du mit Toby abfragst zu verschieben, gibt die E-mail Adresse zu der du die Nachrichten verschieben möchtest. Dann kannst du dich einlogen und unter der Adresse und die E-mails in den Ordner verschieben.');
+define('TRANSFER_INSTR','Um Nachrichten zwischen zwei E-mail Addressen die du mit Toby abfragst zu verschieben, gibt die E-mail Adresse zu der du die Nachrichten verschieben mochtest. Dann kannst du dich einlogen und unter der Adresse und die E-mails in den Ordner verschieben.');
 define('UPLOAD_ERROR','Es ist ein Fehler aufgetreten und die Nachricht konnte nicht hochgeladen werden.');
 define('DOWNLOAD_AS_ZIP','E-mail Nachrichten als Zipdatei herrunterladen');
-define('MAIL_REFRESH_QUESTION','Alle __ Minuten auf neue Emails prüffen? (0 für kein automatisches prüfen.)');
+define('MAIL_REFRESH_QUESTION','Alle __ Minuten auf neue Emails pruffen? (0 fur kein automatisches prufen.)');
 define('UPLOAD_SUCCESS','Die Nachrichten wurden erfolgreich hochgeladen.');
 define('NO_MESSAGES','Es gibt keine Nachrichten zum anzeigen.');
-define('NO_MESSAGE','Es wurde keine Nachricht ausgewählt.');
+define('NO_MESSAGE','Es wurde keine Nachricht ausgewahlt.');
 
 // In the following lines, "query" refers to MySQL queries.
 define('ERROR_IS','Der Fehlerbericht des Querys war wie folgt:');
-define('ERROR_DISCOVERED','Es wurde ein fehler bei ausführen des folgenden querys festgestellt');
+define('ERROR_DISCOVERED','Es wurde ein fehler bei ausfuhren des folgenden querys festgestellt');
 
 // The following two lines have the word "here" between them to complete the phrase. The word "here" is a link to the main page.
-define('LOG_OUT_MESSAGE','Du hast dich jetzt aus Toby ausgelogt. Wenn diese Seite für länger als 5 Sekunden angezeigt wird, oder wenn du Javascript deaktiviert hast, Klick');
-define('LOG_OUT_MESSAGE_END','um zur Login Seite zurück zukehren.');
+define('LOG_OUT_MESSAGE','Du hast dich jetzt aus Toby ausgelogt. Wenn diese Seite fur langer als 5 Sekunden angezeigt wird, oder wenn du Javascript deaktiviert hast, Klick');
+define('LOG_OUT_MESSAGE_END','um zur Login Seite zuruck zukehren.');
 
 // Context: This is the subject line of the email that is sent to the admin after an erroneous query
 define('TOBY_ERROR_REPORT','Toby Error Report');
 
 // Context: the following line is preceded by the words 'Click here'.
-define('TO_RETURN','um zur Hauptseite dieses Frames zurück zukehren.');
+define('TO_RETURN','um zur Hauptseite dieses Frames zuruck zukehren.');
 
 // The following lines are the message shown to the user in the case that there is an error in a MySQL query.
-define('ERROR_MESSAGE','Während der ausgeführten Aktion ist ein fehler aufgetreten. Der Systemadministrator wurde darüber benachrichtigt und wird sich mit ihnen in verbindung setzen.');
+define('ERROR_MESSAGE','Wahrend der ausgefuhrten Aktion ist ein fehler aufgetreten. Der Systemadministrator wurde daruber benachrichtigt und wird sich mit ihnen in verbindung setzen.');
 
 // The following lines make up a message such as the following"
 // "The erro was triggered by user #4 on 2004/05/18 at 12:30 in the file functions.php on line 400."
-define('ERROR_TRIGGER','Der Fehler wurde ausgelößt von User');
+define('ERROR_TRIGGER','Der Fehler wurde ausgelosst von User');
 define('ON','am');
 define('AT','um');
 define('IN_THE_FILE','in der Datei');

@@ -144,7 +144,7 @@ $output .= '
 		$output .= '
 			<br />
 			<input type="submit" name="'.str_replace(" ","_",MOVE).'" value="'.MOVE.'" class="text_button" />
-			<select name="movefolder" style="width: 540px;">
+			<select name="movefolder">
 				<option value="0">'.SELECT_NEW_LOCATION.'</option>
 				'.get_folder_dropdown($_REQUEST["folder"], true).'
 			</select>';
