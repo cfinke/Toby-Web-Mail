@@ -4,7 +4,7 @@
 
 error_reporting(E_ALL ^ E_NOTICE);
 
-$langs = array("en"=>"English","es"=>"Español");
+$langs = array("en"=>"English","es"=>"Español","de"=>"Deutsch");
 $path = $_REQUEST["directory"];
 $errors = array();
 $config_errors = array();

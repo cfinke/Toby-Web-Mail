@@ -15,7 +15,7 @@ $navigationpage = "nav.php";
 $mainoptionspage = "options.php";
 $addressbookpage = "addressbook.php";
 
-$langs = array("en"=>"English","es"=>"Español");
+$langs = array("en"=>"English","es"=>"Español","de"=>"Deutsch");
 
 $transdtd = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
 $framedtd = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">';
