@@ -39,7 +39,7 @@ class email_message {
 			$this->parsed_headers["MIME-Version"] = "1.0";
 		}
 		else{
-			$this->parts[0] = new message_part(trim($body));
+			$this->parts[0] = new message_part("This line is used for internal data and should never be seen.\r\n\r\n".trim($body));
 			$this->parts[0]->content_type = "text";
 			$this->parts[0]->content_subtype = "plain";
 			$this->parts[0]->content_disposition = "inline";
