@@ -1,21 +1,19 @@
-2004/05/13
-Removed the $this->body variable from the email_message class.
+2004/05/23
+Upgraded to newer version of HTMLArea.
+Second interation of thread arcs now uses thread_arc class; arcs can be made horizontally or vertically.
+Made file errors unlinking in install script non-fatal.
+Added the `sent` column to `email`.
+Made "What is this?" window a javascript popup.
 
-2004/05/16
-Now writes original message to database and does formatting on display side to avoid losing data.
+2004/05/21
+Changed the header on message reply bodies.
+Did some code reorganization.
+Added a thread view at the end of each message.
+Added bold to date_header class.
+Added indexes on Message-ID and In-Reply-To
 
-2004/05/17
-Changed line length in reply emails to 64-74 characters.
-Added ability to specify how often Toby refreshes the Inbox.
-Added a javascript alert when there is new mail on a refresh.
-Removed the requirement that the entire Toby directory be writable by the server.
-Fixed bug where HTML part of body would not be displayed for certain multipart messages. (In export_html_body, $body was being reassigned after the html body had been found.)
-Fixed bug in email_message class where first paragraph of plain text e-mails was being deleted.  This is due to the addition of using the email_message class for non-multipart e-mails, so it thought the first paragraph was the headers
-Removed re-definition of TRANSFER_EMAIL.
-
-2004/05/18
-Changed error reporting to PHPs default.
-Fixed behavior of reply/replytoall/forward buttons when no message had been read
-Added default config file.
-Fixed behavior of reply/replytoall/forward buttons when no message had been read.
-Re-wrote the upgrade script to mimic the install script.  Made more changes to fix the whole config.php problem.
+2004/05/19
+Changed timestamp function to allow dates without the day of the week.
+Added support for multipart parts in multipart messages.
+Fixed bug where urlencodings (ie. %20) were showing up in the message with the percent sign replaced with an = (ie. =20).  These are now decoded.
+Fixed bug where first date section would show up as 1969.

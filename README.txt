@@ -1,4 +1,4 @@
-README FOR TOBY WEB MAIL 0.4.2
+README FOR TOBY WEB MAIL 0.5
 ==============================
 
 For instructions on upgrading from previous versions of Toby, see the 
