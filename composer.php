@@ -440,7 +440,7 @@ function get_reply_header($message_id, $type = "text"){
 
 function get_reply_body($message_id, $type = "text"){
 	if ($type == "text"){
-		$wrap_length = 40;
+		$wrap_length = 64;
 		
 		$body .= get_text_body($message_id);
 		
@@ -452,6 +452,7 @@ function get_reply_body($message_id, $type = "text"){
 			$length = strlen(trim($bodypart));
 			$i = 0;
 			$line = $bodypart;
+			
 			do {
 				$templine = substr($bodypart, $i, $wrap_length);
 				
