@@ -52,8 +52,12 @@ if (isset($_REQUEST["id"])){
 		$message = get_message_to_view($_REQUEST["id"], $_REQUEST["action"]);
 		$message_thread = new email_thread($_REQUEST["id"]);
 		$thread_arc = new thread_arc($_REQUEST["id"]);
-		$map = $thread_arc->get_image_map();
-		$img = '<img src="'.$_SERVER["PHP_SELF"].'?action=arc&id='.$_REQUEST["id"].'" usemap="#arc_map" />';
+		
+		if ($thread_arc->exists){
+			$map = $thread_arc->get_image_map();
+			$img = '<img src="'.$_SERVER["PHP_SELF"].'?action=arc&id='.$_REQUEST["id"].'" usemap="#arc_map" />';
+		}
+		
 		$thread_nav = $message_thread->thread_nav;
 	}
 }

@@ -1,6 +1,8 @@
 <?php
 
 class thread_arc {
+	var $exists;
+	
 	var $id;
 	var $thread;
 	
@@ -28,6 +30,14 @@ class thread_arc {
 		// Set up the configuration values for the graphic.
 		$this->image_width = round(($this->thread->num_messages * 1.6 * $this->circle_width) + (0.5 * $this->circle_width));
 		$this->image_height = $this->image_width;
+		
+		$this->exists = (function_exists('imagecreate') &&
+						 function_exists('imagecolorallocate') &&
+						 function_exists('imagearc') &&
+						 function_exists('imagefilledellipse') &&
+						 function_exists('imagecopy') &&
+						 function_exists('imagedestroy') &&
+						 function_exists('imagejpeg'));
 	}
 	
 	function export_image(){
@@ -206,8 +216,8 @@ class thread_arc {
 		}
 		
 		// Output the new image.
-		header("Content-type: image/png");
-		imagepng($new_image);
+		header("Content-type: image/jpeg");
+		imagejpeg($new_image, '', 100);
 		
 		// Destroy the new image.
 		imagedestroy($new_image);
