@@ -189,6 +189,7 @@ else{
 			  `compose_type` ENUM( 'text', 'html' ) NOT NULL DEFAULT 'text',
 			  `lang` VARCHAR( 8 ) NOT NULL DEFAULT 'en',
   			  `timezone` VARCHAR( 8 ) NOT NULL DEFAULT '+0000',
+  			  `refresh_interval` VARCHAR(4) NOT NULL DEFAULT '10',
 			  UNIQUE KEY `id` (`id`),
 			  UNIQUE KEY `username` (`email_address`,`host`)
 			) TYPE=MyISAM";

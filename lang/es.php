@@ -158,4 +158,7 @@ define('DESTINATION_ADDRESS','Dirección Del E-mail De la Destinación');
 define('LANGUAGE','Lengua');
 
 define('TIMEZONE','Zona de Tiempo');
+
+define('MAIL_REFRESH_QUESTION','¿Debe la comprobación para de Toby nuevo enviar cada __ minutos? (introduzca 0 para inhabilitar.)');
+
 ?>

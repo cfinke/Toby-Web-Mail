@@ -41,7 +41,7 @@ switch ($_REQUEST["action"]){
 		$_REQUEST["action"] = $_REQUEST["oldaction"];
 	case SEND:
 	default:
-		$meta = '<meta http-equiv="refresh" content="300; url='.$_SERVER["PHP_SELF"].'">';
+		if ($_SESSION["toby"]["refresh_interval"] > 0) $meta = '<meta http-equiv="refresh" content="'.($_SESSION["toby"]["refresh_interval"] * 60).'; url='.$_SERVER["PHP_SELF"].'">';
 		unset($_REQUEST["folder"]);
 		download_messages();
 		$message_rows = get_message_rows("inbox", '', $_REQUEST["orderby"],$_REQUEST["direction"]);

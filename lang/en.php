@@ -279,4 +279,7 @@ define('UPLOAD_MESSAGE','Upload Message');
 define('UPLOAD_SUCCESS','The message was uploaded successfully.');
 
 define('TIMEZONE','Timezone');
+
+define('MAIL_REFRESH_QUESTION','Check for new mail every __ minutes? (Enter 0 to disable.)');
+
 ?>

@@ -112,6 +112,9 @@ if ($_REQUEST["action"] == "do_upgrade"){
 			$query = "ALTER TABLE `email_users` ADD `timezone` VARCHAR(8) DEFAULT '+0000' NOT NULL";
 			$result = @mysql_query($query);
 			
+			$query = "ALTER TABLE `email_users` ADD `refresh_interval` VARCHAR(4) DEFAULT '10' NOT NULL";
+			$result = @mysql_query($query);			
+			
 			break;
 	}
 	
