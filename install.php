@@ -11,7 +11,7 @@ $config_errors = array();
 
 $writetoconfig = '<?php
 
-$database_host = "'.stripslashes($_REQUEST["mysql_host"]).'";
+$database_host = "'.stripslashes($_REQUEST["database_host"]).'";
 $database_user = "'.stripslashes($_REQUEST["database_user"]).'";
 $database_password = "'.stripslashes($_REQUEST["database_password"]).'";
 $database_name = "'.stripslashes($_REQUEST["database_name"]).'";
@@ -42,33 +42,34 @@ $output = '
 				<h1>Install Toby Web Mail</h1>';
 
 if ($_REQUEST["action"] == "install"){
-	if($_REQUEST["lang"] == ""){
+	// First, check for missing data.
+	if(strlen(trim($_REQUEST["lang"])) == 0){
 		$errors[] = 'Please specify a default language.';
 	}
-	if(!$_REQUEST["email"]){
+	if(strlen(trim($_REQUEST["email"])) == 0){
+		$errors[] = 'Please enter the administrator\'s e-mail address.';
+	}
+	if (strlen(trim($_REQUEST["database_host"])) == 0){
 		$errors[] = 'Please enter the name of your MySQL host.';
 	}
-	if (!$_REQUEST["mysql_host"]){
-		$errors[] = 'Please enter the name of your MySQL host.';
-	}
-	if (!$_REQUEST["database_name"]){
-		$errors[] = 'Please enter the MySQL database name.';
-	}
-	if (!$_REQUEST["database_user"]){
+	if (strlen(trim($_REQUEST["database_user"])) == 0){
 		$errors[] = 'Please enter the MySQL username.';
 	}
-	if (!$_REQUEST["database_password"]){
+	if (strlen(trim($_REQUEST["database_name"])) == 0){
+		$errors[] = 'Please enter the MySQL database name.';
+	}
+	if (strlen(trim($_REQUEST["database_password"])) == 0){
 		$errors[] = 'Please enter the MySQL password.';
 	}
-	if (!$_REQUEST["directory"]){
-		$errors[] = 'Please enter the Toby installation directory.';
+	if (strlen(trim($_REQUEST["directory"])) == 0){
+		$errors[] = 'Please enter the full path to the Toby installation directory.';
 	}
-	if (!$_REQUEST["temp_directory"]){
-		$errors[] = 'Please enter the temporary file directory.';
+	if (strlen(trim($_REQUEST["temp_directory"])) == 0){
+		$errors[] = 'Please enter the full path to the temporary file directory.';
 	}
 	
 	if (count($errors) == 0){
-		if(!@mysql_connect($_REQUEST["mysql_host"],$_REQUEST["database_user"],$_REQUEST["database_password"])){
+		if(!@mysql_connect($_REQUEST["database_host"],$_REQUEST["database_user"],$_REQUEST["database_password"])){
 			$errors[] = 'Toby could not connect to the MySQL host with the information you provided.';
 		}
 		elseif(!mysql_select_db($_REQUEST["database_name"])){
@@ -106,7 +107,7 @@ if ($_REQUEST["action"] == "install"){
 				fclose($handle);
 			}
 			else{
-				$config_errors[] = "Toby could not write the config.php file.  Either make this file writable by the Web server, or replace the contents of the current config.php file with the following code:<br /><pre>" . htmlentities($writetoconfig) . "</pre>If you choose to overwrite the file manually, do so, and then delete the files install.php and upgrade.php, if they exist.  Don't forget to change the permissions back on config.php after you overwrite it.  Otherwise, you can change the permissions on config.php and have the script attempt to overwrite it by clicking the 'Try Again' button.";
+				$config_errors[] = "Toby could not write the config.php file.  Either make this file writable by the Web server and click 'Try Again', or replace the contents of the current config.php file with the following code:<br /><pre>" . htmlentities($writetoconfig) . "</pre>If you choose to overwrite the file manually, do so, and then delete the files install.php and upgrade.php, if they exist.  Don't forget to change the permissions back on config.php after you overwrite it.";
 			}
 		}
 	}
@@ -238,7 +239,7 @@ if ($_REQUEST["action"] == "install"){
 			
 			$output .= '
 				<input type="hidden" name="action" value="try_again" />
-				<input type="hidden" name="mysql_host" value="'.stripslashes($_REQUEST["mysql_host"]).'" />
+				<input type="hidden" name="database_host" value="'.stripslashes($_REQUEST["database_host"]).'" />
 				<input type="hidden" name="database_user" value="'.stripslashes($_REQUEST["database_user"]).'" />
 				<input type="hidden" name="database_password" value="'.stripslashes($_REQUEST["database_password"]).'" />
 				<input type="hidden" name="database_name" value="'.stripslashes($_REQUEST["database_name"]).'" />
@@ -277,14 +278,11 @@ if($_REQUEST["action"] == "try_again"){
 			fclose($handle);
 		}
 		else{
-			$config_errors[] = "Toby could not write the config.php file.  Either make this file writable by the Web server, or replace the contents of the current config.php file with the following code:<br /><pre>" . htmlentities($writetoconfig) . "</pre>If you choose to overwrite the file manually, do so, and then delete the files install.php and upgrade.php, if they exist.  Don't forget to change the permissions back on config.php after you overwrite it.  Otherwise, you can change the permissions on config.php and have the script attempt to overwrite it by clicking the 'Try Again' button.";
+			$config_errors[] = "Toby could not write the config.php file.  Either make this file writable by the Web server and click 'Try Again', or replace the contents of the current config.php file with the following code:<br /><pre>" . htmlentities($writetoconfig) . "</pre>If you choose to overwrite the file manually, do so, and then delete the files install.php and upgrade.php, if they exist.  Don't forget to change the permissions back on config.php after you overwrite it.";
 		}
 	}
 	
 	if (count($config_errors) == 0){
-		$install_file = $path . $_SERVER["PHP_SELF"];
-		$install_file = str_replace("upgrade.php","install.php", $install_file);
-		
 		if (is_file($path . "install.php")) unlink($path . "install.php");
 		if (is_file($path . "upgrade.php")) unlink($path . "upgrade.php");
 		
@@ -293,7 +291,7 @@ if($_REQUEST["action"] == "try_again"){
 	else{
 		$output .= '
 			<input type="hidden" name="action" value="try_again" />
-			<input type="hidden" name="mysql_host" value="'.stripslashes($_REQUEST["mysql_host"]).'" />
+			<input type="hidden" name="database_host" value="'.stripslashes($_REQUEST["database_host"]).'" />
 			<input type="hidden" name="database_user" value="'.stripslashes($_REQUEST["database_user"]).'" />
 			<input type="hidden" name="database_password" value="'.stripslashes($_REQUEST["database_password"]).'" />
 			<input type="hidden" name="database_name" value="'.stripslashes($_REQUEST["database_name"]).'" />
@@ -315,9 +313,9 @@ if($_REQUEST["action"] == "try_again"){
 	}
 }
 elseif(!$set_config_error){
-	$mysql_host = ($_REQUEST["mysql_host"]) ? $_REQUEST["mysql_host"] : 'localhost';
-	$tmp_directory = ($_REQUEST["temp_directory"]) ? stripslashes($_REQUEST["temp_directory"]) : '/tmp/';
-	$directory = ($_REQUEST["directory"]) ? $_REQUEST["directory"] : $_SERVER["DOCUMENT_ROOT"].str_replace("install.php","",$_SERVER["PHP_SELF"]);
+	$database_host = ($_REQUEST["action"] != "") ? $_REQUEST["database_host"] : 'localhost';
+	$tmp_directory = ($_REQUEST["action"] != "") ? stripslashes($_REQUEST["temp_directory"]) : '/tmp/';
+	$directory = ($_REQUEST["action"] != "") ? $_REQUEST["directory"] : $_SERVER["DOCUMENT_ROOT"].str_replace("install.php","",$_SERVER["PHP_SELF"]);
 	$checked = ($_REQUEST["overwrite_tables"]) ? ' checked="true"' : '';
 	
 	if (count($errors) > 0){
@@ -331,7 +329,7 @@ elseif(!$set_config_error){
 	}
 	
 	$output .= '	<input type="hidden" name="action" value="install" />
-					<table style="width: 100%; margin: 0; padding: 0;">
+					<table>
 						<tr>
 							<td class="formlabel"><label for="language">Default interface language:</label></td>
 							<td>
@@ -351,8 +349,8 @@ elseif(!$set_config_error){
 							<td><input type="text" name="email" id="email" value="'.$_REQUEST["email"].'" /></td>
 						</tr>
 						<tr>
-							<td class="formlabel"><label for="mysql_host">MySQL host:</label></td>
-							<td><input type="text" name="mysql_host" id="mysql_host" value="'.$mysql_host.'" /></td>
+							<td class="formlabel"><label for="database_host">MySQL host:</label></td>
+							<td><input type="text" name="database_host" id="database_host" value="'.$database_host.'" /></td>
 						</tr>
 						<tr>
 							<td class="formlabel"><label for="database_user">MySQL Username:</label></td>
