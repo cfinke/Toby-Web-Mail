@@ -142,7 +142,7 @@ function remove_attachment($attachment_key){
 	$filename = $_SESSION["toby"]["compose"]["attached_files"][$attachment_key]["tmp_name"];
 	
 	if (is_file($filename)){
-		unlink($filename);
+		@unlink($filename);
 	}
 	
 	unset($_SESSION["toby"]["compose"]["attached_files"][$attachment_key]);
