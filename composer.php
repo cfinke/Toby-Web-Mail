@@ -428,18 +428,10 @@ function get_reply_header($message_id, $type = "text"){
 		$row = mysql_fetch_array($result, MYSQL_ASSOC);
 		
 		if ($type == "html"){
-			$header .= "----- ".ORIGINAL_MESSAGE." -----<br />\n";
-			$header .= FROM.": ".htmlentities(htmlentities($row["From"]))."<br />\n";
-			$header .= SEND_TO.": ".htmlentities(htmlentities($row["To"]))."<br />\n";
-			$header .= SENT.": ".$row["Date"]."<br />\n";
-			$header .= SUBJECT.": ".$row["Subject"]."<br />\n<br />\n";
+			$header .= "On ".$row["Date"].", ".htmlentities(htmlentities($row["From"]))." wrote:<br />\n";
 		}
 		else{
-			$header .= "----- ".ORIGINAL_MESSAGE." -----\n";
-			$header .= FROM.": ".$row["From"]."\n";
-			$header .= SEND_TO.": ".$row["To"]."\n";
-			$header .= SENT.": ".$row["Date"]."\n";
-			$header .= SUBJECT.": ".$row["Subject"]."\n\n";
+			$header .= "On ".$row["Date"].", ".$row["From"]." wrote:\n";
 		}
 		
 		return $header;
