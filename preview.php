@@ -233,7 +233,7 @@ function get_message_rows($type, $subtype = '', $orderby = "niceDate", $directio
 			
 			switch($orderby){
 				case 'niceDate':
-					if (isset($current_date) && ($current_date != $message["date"])){
+					if ($current_date != $message["date"]){
 						if ($old_rows != ''){
 							$output .= '
 								<tr class="date_header" style="display: auto;">
