@@ -172,51 +172,23 @@ $output .= $transdtd . '
 
 if ($compose_type == "html"){
 	$output .= '
-			<script type="text/javascript" src="htmlarea/htmlarea.js"></script>
-			<script type="text/javascript" src="htmlarea/lang/en.js"></script>
-			<script type="text/javascript" src="htmlarea/dialog.js"></script>
-			<script type="text/javascript" src="htmlarea/popupwin.js"></script>
 			<script type="text/javascript">
-				var editor = null;
-				
-				function initEditor() {
-					// create an editor for the "message" textbox
-					editor = new HTMLArea("message");
-					
-  					editor.generate();
-  					return false;
-				}
-				
-				function insertHTML() {
-					var html = prompt("'.ENTER_HTML_CODE.'");
-					
-  					if (html) {
-    					editor.insertHTML(html);
-  					}
-				}
-				
-				function highlight() {
-  					editor.surroundHTML(\'<span style="background-color: yellow">\', \'</span>\');
-				}
-			</script>	';
+			   _editor_url = "htmlarea/";
+			   _editor_lang = "'.$_SESSION["toby"]["lang"].'";
+			</script>
+			<script type="text/javascript" src="htmlarea/htmlarea.js"></script>';
 }
 
 $output .= '
-			<link rel="stylesheet" type="text/css" href="htmlarea/htmlarea.css" />
 			<link rel="stylesheet" type="text/css" href="'.$stylesheet.'" />
 		</head>
 		<body';
 
 if ($compose_type == "html"){
-	$output .= ' onload="initEditor();">
-		<script type="text/javascript">
-			_editor_url = "htmlarea/"; 
-		</script> ';
+	$output .= ' onload="HTMLArea.replaceAll();"';
 }
-else{
-	$output .= '>';
-}
-$output .= '
+
+$output .= '>
 			<form action="'.$wrapperpage.'" target="wrapper" method="post" enctype="multipart/form-data" name="mainform" id="mainform">
 				<div id="compose">
 					<input type="hidden" name="in_reply_to" value="'.$in_reply_to.'" />
