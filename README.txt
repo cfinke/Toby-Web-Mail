@@ -20,4 +20,4 @@ for that code is found in the htmlarea subdirectory.
 
 ============================
 
-Thanks for downloading; enjoy.  You can contact me at chris@efinke.com for anything regarding Toby Web Mail.
+You can contact me at chris@efinke.com for anything regarding Toby Web Mail.  Thanks for downloading; enjoy.
