@@ -316,7 +316,7 @@ if($_REQUEST["action"] == "try_again"){
 elseif(!$set_config_error){
 	$database_host = ($_REQUEST["action"] != "") ? $_REQUEST["database_host"] : 'localhost';
 	$tmp_directory = ($_REQUEST["action"] != "") ? stripslashes($_REQUEST["temp_directory"]) : '/tmp/';
-	$directory = ($_REQUEST["action"] != "") ? $_REQUEST["directory"] : $_SERVER["DOCUMENT_ROOT"].str_replace("install.php","",$_SERVER["PHP_SELF"]);
+	$directory = ($_REQUEST["action"] != "") ? $_REQUEST["directory"] : str_replace("install.php","",$_SERVER["PATH_TRANSLATED"]);
 	$checked = ($_REQUEST["overwrite_tables"]) ? ' checked="true"' : '';
 	
 	if (count($errors) > 0){
