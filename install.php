@@ -2,15 +2,46 @@
 
 // Installation file.
 
-error_reporting(0);
+error_reporting(E_ALL ^ E_NOTICE);
 
 $langs = array("en"=>"English","es"=>"Español");
+$path = $_REQUEST["directory"];
+$errors = array();
+$config_errors = array();
+
+$writetoconfig = '<?php
+
+$database_host = "'.stripslashes($_REQUEST["mysql_host"]).'";
+$database_user = "'.stripslashes($_REQUEST["database_user"]).'";
+$database_password = "'.stripslashes($_REQUEST["database_password"]).'";
+$database_name = "'.stripslashes($_REQUEST["database_name"]).'";
+
+$admin_email = "'.stripslashes($_REQUEST["email"]).'";
+
+$temp_directory = "'.$_REQUEST["temp_directory"].'";
+
+$default_lang = "'.$_REQUEST["lang"].'";
+
+if (isset($_SESSION["toby"]["lang"])){
+	include("lang/".$_SESSION["toby"]["lang"].".php");
+}
+else{
+	include("lang/".$default_lang.".php");
+}
+
+?>';
+
+$output = '
+	<html>
+		<head>
+			<title>Toby Web Mail Installer</title>
+			<link rel="stylesheet" type="text/css" href="style.css" />
+		</head>
+		<body style="margin: 0; padding: 0;">
+			<form action="'.$_SERVER["PHP_SELF"].'" method="post">
+				<h1>Install Toby Web Mail</h1>';
 
 if ($_REQUEST["action"] == "install"){
-	$errors = array();
-	
-	$path = $_SERVER["DOCUMENT_ROOT"] . $_REQUEST["directory"];
-	
 	if($_REQUEST["lang"] == ""){
 		$errors[] = 'Please specify a default language.';
 	}
@@ -31,6 +62,9 @@ if ($_REQUEST["action"] == "install"){
 	}
 	if (!$_REQUEST["directory"]){
 		$errors[] = 'Please enter the Toby installation directory.';
+	}
+	if (!$_REQUEST["temp_directory"]){
+		$errors[] = 'Please enter the temporary file directory.';
 	}
 	
 	if (count($errors) == 0){
@@ -57,35 +91,13 @@ if ($_REQUEST["action"] == "install"){
 	}
 	
 	if (count($errors) == 0){
-		$writetoconfig = '<?php
-
-$database_host = "'.stripslashes($_REQUEST["mysql_host"]).'";
-$database_user = "'.stripslashes($_REQUEST["database_user"]).'";
-$database_password = "'.stripslashes($_REQUEST["database_password"]).'";
-$database_name = "'.stripslashes($_REQUEST["database_name"]).'";
-
-$admin_email = "'.stripslashes($_REQUEST["email"]).'";
-
-$temp_directory = "'.$_REQUEST["temp_directory"].'";
-
-$default_lang = "'.$_REQUEST["lang"].'";
-
-if (isset($_SESSION["toby"]["lang"])){
-	include("lang/".$_SESSION["toby"]["lang"].".php");
-}
-else{
-	include("lang/".$default_lang.".php");
-}
-
-?>';
-		
 		$handle = @fopen($path . "config.php","w");
 		if ($handle){
 			fwrite($handle, $writetoconfig);
 			fclose($handle);
 		}
 		else{
-			chmod($path . "config.php", 0666);
+			@chmod($path . "config.php", 0666);
 			
 			$handle = @fopen($path . "config.php","w");
 			
@@ -94,7 +106,7 @@ else{
 				fclose($handle);
 			}
 			else{
-				$errors[] = "Toby could not write the config.php file.  If this file exists already, delete it.";
+				$config_errors[] = "Toby could not write the config.php file.  Either make this file writable by the Web server, or replace the contents of the current config.php file with the following code:<br /><pre>" . htmlentities($writetoconfig) . "</pre>If you choose to overwrite the file manually, do so, and then delete the files install.php and upgrade.php, if they exist.  Don't forget to change the permissions back on config.php after you overwrite it.  Otherwise, you can change the permissions on config.php and have the script attempt to overwrite it by clicking the 'Try Again' button.";
 			}
 		}
 	}
@@ -215,91 +227,165 @@ else{
 			) TYPE=MyISAM";
 		$result = mysql_query($query) or die(mysql_error() . '<br />' .$query);
 		
-		unlink($path . "install.php");
-		unlink($path . "upgrade.php");
+		if (count($config_errors) == 0){
+			if (is_file($path . "install.php")) unlink($path . "install.php");
+			if (is_file($path . "upgrade.php")) unlink($path . "upgrade.php");
+			
+			header("Location: index.php");
+		}
+		else{
+			$set_config_error = true;
+			
+			$output .= '
+				<input type="hidden" name="action" value="try_again" />
+				<input type="hidden" name="mysql_host" value="'.stripslashes($_REQUEST["mysql_host"]).'" />
+				<input type="hidden" name="database_user" value="'.stripslashes($_REQUEST["database_user"]).'" />
+				<input type="hidden" name="database_password" value="'.stripslashes($_REQUEST["database_password"]).'" />
+				<input type="hidden" name="database_name" value="'.stripslashes($_REQUEST["database_name"]).'" />
+				<input type="hidden" name="email" value="'.stripslashes($_REQUEST["email"]).'" />
+				<input type="hidden" name="temp_directory" value="'.$_REQUEST["temp_directory"].'" />
+				<input type="hidden" name="lang" value="'.$_REQUEST["lang"].'" />
+				<p>Toby found the following errors:</p><ul class="error">';
+			
+			foreach($config_errors as $error){
+				$output .= '<li>'.$error.'</li>';
+			}
+			
+			$output .= '</ul>
+						<table>
+							<tr>
+								<td colspan="2" style="text-align: center;"><input type="submit" name="submit" value="Try Again" /></td>
+							</tr>
+						</table>';
+		}
+	}
+}
+
+if($_REQUEST["action"] == "try_again"){
+	$handle = @fopen($path . "config.php","w");
+	if ($handle){
+		fwrite($handle, $writetoconfig);
+		fclose($handle);
+	}
+	else{
+		@chmod($path . "config.php", 0666);
+		
+		$handle = @fopen($path . "config.php","w");
+		
+		if ($handle){
+			fwrite($handle, $writetoconfig);
+			fclose($handle);
+		}
+		else{
+			$config_errors[] = "Toby could not write the config.php file.  Either make this file writable by the Web server, or replace the contents of the current config.php file with the following code:<br /><pre>" . htmlentities($writetoconfig) . "</pre>If you choose to overwrite the file manually, do so, and then delete the files install.php and upgrade.php, if they exist.  Don't forget to change the permissions back on config.php after you overwrite it.  Otherwise, you can change the permissions on config.php and have the script attempt to overwrite it by clicking the 'Try Again' button.";
+		}
+	}
+	
+	if (count($config_errors) == 0){
+		$install_file = $path . $_SERVER["PHP_SELF"];
+		$install_file = str_replace("upgrade.php","install.php", $install_file);
+		
+		if (is_file($path . "install.php")) unlink($path . "install.php");
+		if (is_file($path . "upgrade.php")) unlink($path . "upgrade.php");
 		
 		header("Location: index.php");
 	}
+	else{
+		$output .= '
+			<input type="hidden" name="action" value="try_again" />
+			<input type="hidden" name="mysql_host" value="'.stripslashes($_REQUEST["mysql_host"]).'" />
+			<input type="hidden" name="database_user" value="'.stripslashes($_REQUEST["database_user"]).'" />
+			<input type="hidden" name="database_password" value="'.stripslashes($_REQUEST["database_password"]).'" />
+			<input type="hidden" name="database_name" value="'.stripslashes($_REQUEST["database_name"]).'" />
+			<input type="hidden" name="email" value="'.stripslashes($_REQUEST["email"]).'" />
+			<input type="hidden" name="temp_directory" value="'.$_REQUEST["temp_directory"].'" />
+			<input type="hidden" name="lang" value="'.$_REQUEST["lang"].'" />
+			<p>Toby found the following errors:</p><ul class="error">';
+		
+		foreach($config_errors as $error){
+			$output .= '<li>'.$error.'</li>';
+		}
+		
+		$output .= '</ul>
+					<table>
+						<tr>
+							<td colspan="2" style="text-align: center;"><input type="submit" name="submit" value="Try Again" /></td>
+						</tr>
+					</table>';
+	}
 }
-
-$mysql_host = ($_REQUEST["mysql_host"]) ? $_REQUEST["mysql_host"] : 'localhost';
-$tmp_directory = ($_REQUEST["temp_directory"]) ? stripslashes($_REQUEST["temp_directory"]) : '/tmp/';
-$directory = ($_REQUEST["directory"]) ? $_REQUEST["directory"] : str_replace("install.php","",$_SERVER["PHP_SELF"]);
-$checked = ($_REQUEST["overwrite_tables"]) ? ' checked="true"' : '';
-
-$output = '
-	<html>
-		<head>
-			<title>Toby Web Mail Installer</title>
-			<link rel="stylesheet" type="text/css" href="style.css" />
-		</head>
-		<body style="margin: 0; padding: 0;">
-			<form action="'.$_SERVER["PHP_SELF"].'" method="post">
-				<h1>Install Toby Web Mail</h1>';
-
-if (count($errors) > 0){
-	$output .= '<p>Toby found the following errors:</p><ul class="error">';
+elseif(!$set_config_error){
+	$mysql_host = ($_REQUEST["mysql_host"]) ? $_REQUEST["mysql_host"] : 'localhost';
+	$tmp_directory = ($_REQUEST["temp_directory"]) ? stripslashes($_REQUEST["temp_directory"]) : '/tmp/';
+	$directory = ($_REQUEST["directory"]) ? $_REQUEST["directory"] : $_SERVER["DOCUMENT_ROOT"].str_replace("install.php","",$_SERVER["PHP_SELF"]);
+	$checked = ($_REQUEST["overwrite_tables"]) ? ' checked="true"' : '';
 	
-	foreach($errors as $error){
-		$output .= '<li>'.$error.'</li>';
+	if (count($errors) > 0){
+		$output .= '<p>Toby found the following errors:</p><ul class="error">';
+		
+		foreach($errors as $error){
+			$output .= '<li>'.$error.'</li>';
+		}
+		
+		$output .= '</ul>';
 	}
 	
-	$output .= '</ul>';
+	$output .= '	<input type="hidden" name="action" value="install" />
+					<table style="width: 100%; margin: 0; padding: 0;">
+						<tr>
+							<td class="formlabel"><label for="language">Default interface language:</label></td>
+							<td>
+								<select name="lang" id="lang">
+									<option value="">Select a language.</option>';
+	
+	foreach($langs as $key => $lang){
+		$output .= '<option value="'.$key.'"';
+		if ($_REQUEST["lang"] == $key) $output .= ' selected="selected"';
+		$output .= '>'.$lang.'</option>';
+	}
+	
+	$output .= '			</td>
+						</tr>
+						<tr>
+							<td class="formlabel"><label for="email">Administrator\'s E-mail:</label></td>
+							<td><input type="text" name="email" id="email" value="'.$_REQUEST["email"].'" /></td>
+						</tr>
+						<tr>
+							<td class="formlabel"><label for="mysql_host">MySQL host:</label></td>
+							<td><input type="text" name="mysql_host" id="mysql_host" value="'.$mysql_host.'" /></td>
+						</tr>
+						<tr>
+							<td class="formlabel"><label for="database_user">MySQL Username:</label></td>
+							<td><input type="text" name="database_user" id="database_user" value="'.$_REQUEST["database_user"].'" /></td>
+						</tr>
+						<tr>
+							<td class="formlabel"><label for="database_password">MySQL Password:</label></td>
+							<td><input type="text" name="database_password" id="database_password" value="'.$_REQUEST["database_password"].'" /></td>
+						</tr>
+						<tr>
+							<td class="formlabel"><label for="database_name">MySQL Database:</label></td>
+							<td><input type="text" name="database_name" id="database_name" value="'.$_REQUEST["database_name"].'" /></td>
+						</tr>
+						<tr>
+							<td class="formlabel"><label for="directory"><i>Full Path</i> to Toby Installation Directory:</label></td>
+							<td><input type="text" name="directory" id="directory" value="'.$directory.'" /></td>
+						</tr>
+						<tr>
+							<td class="formlabel"><label for="temp_directory">Temporary File Directory:</label></td>
+							<td><input type="text" name="temp_directory" id="temp_directory" value="'.$tmp_directory.'" /></td>
+						</tr>
+						<tr>
+							<td class="formlabel"><label for="overwrite_tables">Overwrite tables of the same name:</label></td>
+							<td><input type="checkbox" name="overwrite_tables" id="overwrite_tables" value="1"'.$checked.' /></td>
+						</tr>
+						<tr>
+							<td class="formlabel"></td>
+							<td><input type="submit" name="submit" id="submit" value="Install" /></td>
+						</tr>
+					</table>';
 }
 
-$output .= '	<input type="hidden" name="action" value="install" />
-				<table style="width: 100%; margin: 0; padding: 0;">
-					<tr>
-						<td class="formlabel"><label for="language">Default interface language:</label></td>
-						<td>
-							<select name="lang" id="lang">
-								<option value="">Select a language.</option>';
-
-foreach($langs as $key => $lang){
-	$output .= '<option value="'.$key.'"';
-	if ($_REQUEST["lang"] == $key) $output .= ' selected="selected"';
-	$output .= '>'.$lang.'</option>';
-}
-
-$output .= '			</td>
-					</tr>
-					<tr>
-						<td class="formlabel"><label for="email">Administrator\'s E-mail:</label></td>
-						<td><input type="text" name="email" id="email" value="'.$_REQUEST["email"].'" /></td>
-					</tr>
-					<tr>
-						<td class="formlabel"><label for="mysql_host">MySQL host:</label></td>
-						<td><input type="text" name="mysql_host" id="mysql_host" value="'.$mysql_host.'" /></td>
-					</tr>
-					<tr>
-						<td class="formlabel"><label for="database_user">MySQL Username:</label></td>
-						<td><input type="text" name="database_user" id="database_user" value="'.$_REQUEST["database_user"].'" /></td>
-					</tr>
-					<tr>
-						<td class="formlabel"><label for="database_password">MySQL Password:</label></td>
-						<td><input type="text" name="database_password" id="database_password" value="'.$_REQUEST["database_password"].'" /></td>
-					</tr>
-					<tr>
-						<td class="formlabel"><label for="database_name">MySQL Database:</label></td>
-						<td><input type="text" name="database_name" id="database_name" value="'.$_REQUEST["database_name"].'" /></td>
-					</tr>
-					<tr>
-						<td class="formlabel"><label for="directory">Toby Installation Directory:</label></td>
-						<td><input type="text" name="directory" id="directory" value="'.$directory.'" /></td>
-					</tr>
-					<tr>
-						<td class="formlabel"><label for="temp_directory">Temporary File Directory:</label></td>
-						<td><input type="text" name="temp_directory" id="temp_directory" value="'.$tmp_directory.'" /></td>
-					</tr>
-					<tr>
-						<td class="formlabel"><label for="overwrite_tables">Overwrite tables of the same name:</label></td>
-						<td><input type="checkbox" name="overwrite_tables" id="overwrite_tables" value="1"'.$checked.' /></td>
-					</tr>
-					<tr>
-						<td class="formlabel"></td>
-						<td><input type="submit" name="submit" id="submit" value="Install" /></td>
-					</tr>
-				</table>
+$output .= '
 			</form>
 		</body>
 	</html>';

@@ -1,8 +1,10 @@
 <?php
 
-error_reporting(0);
+error_reporting(E_ALL ^ E_NOTICE);
 
 $path = $_SERVER["DOCUMENT_ROOT"] . $_SERVER["PHP_SELF"];
+$directory = ($_REQUEST["temp_directory"]) ? $_REQUEST["temp_directory"] : str_replace("upgrade.php","",$path);
+
 $path = str_replace("upgrade.php","config.php",$path);
 
 include("config.php");
@@ -173,7 +175,9 @@ $output .= '
 					<legend>Upgrade</legend>';
 
 if (count($errors) > 0){
-	$output .= '<input type="hidden" name="action" value="try_again" />
+	$output .= '
+		<input type="hidden" name="action" value="try_again" />
+		<input type="hidden" name="language" value="'.$_REQUEST["language"].'" />
 		<p>Toby found the following errors:</p><ul class="error">';
 	
 	foreach($errors as $error){
@@ -183,15 +187,6 @@ if (count($errors) > 0){
 	$output .= '</ul>';
 	
 	$output .= '<table>
-					<tr>
-						<td>To what language should Toby default?</td>
-						<td>
-							<select name="language">
-								<option value="en">English</option>
-								<option value="es">Espanol</option>
-							</select>
-						</td>
-					</tr>
 					<tr>
 						<td colspan="2" style="text-align: center;"><input type="submit" name="submit" value="Try Again" /></td>
 					</tr>
@@ -229,7 +224,7 @@ else{
 							</tr>
 					<tr>
 						<td><label for="temp_directory">Temporary File Directory:</label></td>
-						<td><input type="text" name="temp_directory" id="temp_directory" value="'.$tmp_directory.'" /></td>
+						<td><input type="text" name="temp_directory" id="temp_directory" value="'.$directory.'" /></td>
 					</tr>
 							<tr>
 								<td colspan="2" style="text-align: center;"><input type="submit" name="submit" value="Submit" /></td>
