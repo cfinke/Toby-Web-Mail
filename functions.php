@@ -2,6 +2,7 @@
 
 include("message_class.php");
 include("thread_class.php");
+include("thread_arc_class.php");
 
 function save_message($file_array){
 	// This function saves an uploaded e-mail message to the database.

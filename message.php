@@ -8,6 +8,12 @@ error_reporting(E_ALL ^ E_NOTICE);
 
 include("globals.php");
 
+if($_REQUEST["action"] == "arc"){
+	$thread_arc = new thread_arc($_REQUEST["id"]);
+	$thread_arc->export_image();
+	exit;
+}
+
 if (isset($_REQUEST["id"])){
 	if($_REQUEST["action"] == 'get_old_attachment'){
 		get_attached_file($_REQUEST["attachment_id"],$_REQUEST["id"]);
@@ -16,7 +22,9 @@ if (isset($_REQUEST["id"])){
 	else{
 		$message = get_message_to_view($_REQUEST["id"], $_REQUEST["action"]);
 		$message_thread = new email_thread($_REQUEST["id"]);
-		$img = '<img src="imagegen.php?id='.$_REQUEST["id"].'" />';
+		$thread_arc = new thread_arc($_REQUEST["id"]);
+		$map = $thread_arc->get_image_map();
+		$img = '<img src="'.$_SERVER["PHP_SELF"].'?action=arc&id='.$_REQUEST["id"].'" usemap="#arc_map" />';
 	}
 }
 else{
@@ -36,10 +44,16 @@ $output = '
 				<b>'.FROM.': </b>'.htmlentities($message["from"]).'<br />
 				<b>'.SUBJECT.': </b>'.$message["subject"].'
 			</div>
-			<div id="messagebody">
-				'.$message["body"].'
-				'.$message_thread->thread_nav.'
-				'.$img.'
+			<div id="messagebody">';
+
+if ($map){
+	$output .= '<div style="float: right; padding: 15px;">
+					'.$img.'
+					'.$map.'
+				</div>';
+}
+
+$output .= $message["body"].'
 			</div>
 		</body>
 	</html>';

@@ -83,7 +83,7 @@ else{
 	$_SESSION["toby"]["compose"] = array();
 	
 	$output .= '
-		<frameset rows="60%,*">
+		<frameset rows="55%,*">
 			<frame src="'.$previewpage.$querystring.'" name="preview" />
 			<frame src="'.$messagepage.$querystring.'" name="message" />
 		</frameset>';
