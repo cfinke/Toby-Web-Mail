@@ -230,8 +230,8 @@ if ($_REQUEST["action"] == "install"){
 		$result = mysql_query($query) or die(mysql_error() . '<br />' .$query);
 		
 		if (count($config_errors) == 0){
-			if (is_file($path . "install.php")) unlink($path . "install.php");
-			if (is_file($path . "upgrade.php")) unlink($path . "upgrade.php");
+			if (is_file($path . "install.php")) @unlink($path . "install.php");
+			if (is_file($path . "upgrade.php")) @unlink($path . "upgrade.php");
 			
 			header("Location: index.php");
 		}
