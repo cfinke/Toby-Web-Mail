@@ -157,7 +157,7 @@ function email($to, $subject, $message, $cc, $bcc, $filenames, $compose_type = "
 	$headers .= "Date: ".date("r")."\n";
 	$headers .= "From: ".$_SESSION["toby"]["realname"] . "  <".$_SESSION["toby"]["email_address"].">\n";
 	$headers .= "Return-Path: ".$_SESSION["toby"]["realname"] . "  <".$_SESSION["toby"]["email_address"].">\n";
-	$headers .= "Message-ID: <".md5($unique_id)."@".$_SESSION["toby"]["texthost"].">\n";
+	$headers .= "Message-ID: <".md5(uniqid(rand(), true))."@".$_SESSION["toby"]["texthost"].">\n";
 	
 	if (strlen(trim($in_reply_to)) > 0)	$headers .= "In-Reply-To: ".$in_reply_to."\n";
 	
