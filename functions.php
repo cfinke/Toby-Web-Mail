@@ -594,7 +594,7 @@ function download_messages(){
 		imap_close($mailbox);
 	}
 	
-	return;
+	return $total;
 }
 
 function connect_to_mailbox(){
