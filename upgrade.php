@@ -160,7 +160,7 @@ if ($_REQUEST["action"] == "upgrade"){
 				$query = "ALTER TABLE `email_users` ADD `refresh_interval` VARCHAR(4) DEFAULT '10' NOT NULL";
 				$result = @mysql_query($query);
 			case '0.4.2':
-				## Changes introduced in 0.4.3
+				## Changes introduced in 0.5
 				
 				$query = "ALTER TABLE `email` ADD INDEX ( `Message-ID` ) ";
 				$result = @mysql_query($query);
@@ -248,8 +248,8 @@ if($_REQUEST["action"] == "try_again"){
 	}
 	
 	if (count($config_errors) == 0){
-		if (is_file($path . "install.php")) unlink($path . "install.php");
-		if (is_file($path . "upgrade.php")) unlink($path . "upgrade.php");
+		if (is_file($path . "install.php")) @unlink($path . "install.php");
+		if (is_file($path . "upgrade.php")) @unlink($path . "upgrade.php");
 		
 		header("Location: index.php");
 	}
