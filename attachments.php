@@ -4,6 +4,8 @@
 // This file should take care of any operations involving adding/removing
 // attachments from an e-mail.
 
+error_reporting(E_ALL ^ E_NOTICE);
+
 include("globals.php");
 
 // If this page is being requested from the message composition page,

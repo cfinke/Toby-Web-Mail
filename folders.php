@@ -4,6 +4,8 @@
 // This file should take care of anything in the leftmost frame, used
 // for navigating through the messages.
 
+error_reporting(E_ALL ^ E_NOTICE);
+
 include("globals.php");
 
 // The default method of navigation is folder-based.
