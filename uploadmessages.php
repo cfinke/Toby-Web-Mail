@@ -4,6 +4,8 @@
 // This file should take care of anything having to do with uploading
 // message files into Toby.
 
+error_reporting(0);
+
 include("globals.php");
 
 if ($_REQUEST["action"] == UPLOAD_MESSAGE){

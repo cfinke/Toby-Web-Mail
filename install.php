@@ -2,6 +2,8 @@
 
 // Installation file.
 
+error_reporting(0);
+
 $langs = array("en"=>"English","es"=>"Español");
 
 if ($_REQUEST["action"] == "install"){
@@ -64,6 +66,8 @@ $database_name = "'.stripslashes($_REQUEST["database_name"]).'";
 
 $admin_email = "'.stripslashes($_REQUEST["email"]).'";
 
+$temp_directory = "'.$_REQUEST["temp_directory"].'";
+
 $default_lang = "'.$_REQUEST["lang"].'";
 
 if (isset($_SESSION["toby"]["lang"])){
@@ -74,7 +78,7 @@ else{
 }
 
 ?>';
-
+		
 		$handle = @fopen($path . "config.php","w");
 		if ($handle){
 			fwrite($handle, $writetoconfig);
@@ -84,7 +88,7 @@ else{
 			chmod($path . "config.php", 0666);
 			
 			$handle = @fopen($path . "config.php","w");
-
+			
 			if ($handle){
 				fwrite($handle, $writetoconfig);
 				fclose($handle);
@@ -219,6 +223,7 @@ else{
 }
 
 $mysql_host = ($_REQUEST["mysql_host"]) ? $_REQUEST["mysql_host"] : 'localhost';
+$tmp_directory = ($_REQUEST["temp_directory"]) ? stripslashes($_REQUEST["temp_directory"]) : '/tmp/';
 $directory = ($_REQUEST["directory"]) ? $_REQUEST["directory"] : str_replace("install.php","",$_SERVER["PHP_SELF"]);
 $checked = ($_REQUEST["overwrite_tables"]) ? ' checked="true"' : '';
 
@@ -226,11 +231,11 @@ $output = '
 	<html>
 		<head>
 			<title>Toby Web Mail Installer</title>
+			<link rel="stylesheet" type="text/css" href="style.css" />
 		</head>
-		<body>
+		<body style="margin: 0; padding: 0;">
 			<form action="'.$_SERVER["PHP_SELF"].'" method="post">
-				<fieldset>
-					<legend>Install Toby</legend>';
+				<h1>Install Toby Web Mail</h1>';
 
 if (count($errors) > 0){
 	$output .= '<p>Toby found the following errors:</p><ul class="error">';
@@ -243,7 +248,7 @@ if (count($errors) > 0){
 }
 
 $output .= '	<input type="hidden" name="action" value="install" />
-				<table>
+				<table style="width: 100%; margin: 0; padding: 0;">
 					<tr>
 						<td class="formlabel"><label for="language">Default interface language:</label></td>
 						<td>
@@ -283,6 +288,10 @@ $output .= '			</td>
 						<td><input type="text" name="directory" id="directory" value="'.$directory.'" /></td>
 					</tr>
 					<tr>
+						<td class="formlabel"><label for="temp_directory">Temporary File Directory:</label></td>
+						<td><input type="text" name="temp_directory" id="temp_directory" value="'.$tmp_directory.'" /></td>
+					</tr>
+					<tr>
 						<td class="formlabel"><label for="overwrite_tables">Overwrite tables of the same name:</label></td>
 						<td><input type="checkbox" name="overwrite_tables" id="overwrite_tables" value="1"'.$checked.' /></td>
 					</tr>
@@ -291,7 +300,6 @@ $output .= '			</td>
 						<td><input type="submit" name="submit" id="submit" value="Install" /></td>
 					</tr>
 				</table>
-				</fieldset>
 			</form>
 		</body>
 	</html>';

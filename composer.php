@@ -8,7 +8,7 @@ include("globals.php");
 
 // If the user is entering the composition page for the first time, clear
 // the compose session variable.
-if (($_REQUEST["action"] == COMPOSE) && ($_REQUEST["frompage"] != "attachments")){
+if (($_REQUEST["action"] == COMPOSE) && (!isset($_REQUEST["frompage"]) && ($_REQUEST["frompage"] != "attachments"))){
 	unset($_SESSION["toby"]["compose"]);
 	
 	if (isset($_REQUEST["compose_to"])){
@@ -84,7 +84,7 @@ switch($_REQUEST["action"]){
 		break;
 }
 
-if ($_REQUEST["frompage"] == "attachments"){
+if (isset($_REQUEST["frompage"]) && ($_REQUEST["frompage"] == "attachments")){
 	if (count($_SESSION["toby"]["compose"]) > 0){
 		foreach ($_SESSION["toby"]["compose"] as $key => $value){
 			if (!is_array($_SESSION["toby"]["compose"][$key])){

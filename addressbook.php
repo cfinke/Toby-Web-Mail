@@ -4,6 +4,8 @@
 // This file should take care of anything having to do with managing
 // the address book.
 
+error_reporting(0);
+
 include("globals.php");
 
 // Take care of any actions from submitted forms.

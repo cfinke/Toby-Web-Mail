@@ -4,9 +4,11 @@
 // This file should take care of anything having to do with the 
 // message viewing frame.
 
+error_reporting(0);
+
 include("globals.php");
 
-if ($_REQUEST["id"] != NULL){
+if (isset($_REQUEST["id"])){
 	if($_REQUEST["action"] == 'get_old_attachment'){
 		get_attached_file($_REQUEST["attachment_id"],$_REQUEST["id"]);
 		exit;

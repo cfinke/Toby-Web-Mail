@@ -355,8 +355,10 @@ function get_attached_file($k, $i){
 }
 
 function make_tmp_file($k, $i){
+	global $temp_directory;
+	
 	do {
-		$filename = '/tmp/'.rand();
+		$filename = $temp_directory.rand();
 	} while(is_file($filename));
 	
 	$handle = fopen($filename, "w");
@@ -563,6 +565,9 @@ function build_query_string($request_array){
 }
 
 function download_messages(){
+	$messages = array();
+	$messages_downloaded = array();
+	
 	if ($_SESSION["toby"]["save"] || !$_SESSION["toby"]["downloaded"]){
 		$mailbox = connect_to_mailbox();
 		

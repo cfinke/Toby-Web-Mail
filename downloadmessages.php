@@ -4,6 +4,8 @@
 // This page should take care of anything having to do with downloading
 // message backups.
 
+error_reporting(0);
+
 include("globals.php");
 
 // If the user has submitted the form, send the zip file.

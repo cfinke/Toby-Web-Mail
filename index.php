@@ -2,6 +2,8 @@
 
 // Login page
 
+error_reporting(0);
+
 include("config.php");
 
 // If the cookies are set, log the user in automatically.

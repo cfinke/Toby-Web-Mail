@@ -21,27 +21,23 @@ $transdtd = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "htt
 $framedtd = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">';
 
 // Create the action variable.
-
 // Check for any key/value pair where key=value, except for whitespaces.
-if ((is_array($_REQUEST)) && (trim($_REQUEST["action"]) == '')){
+if ((is_array($_REQUEST)) && (!isset($_REQUEST["action"]))){
+	$_REQUEST["action"] = "Inbox";
+	
 	foreach($_REQUEST as $key => $value){
-		$key1 = substr($key,0,strlen($key) - 2) . '_x';
-		$key2 = substr($key,0,strlen($key) - 2) . '_y';
-		
 		if ($key == str_replace(" ","_",$value)){
 			$_REQUEST["action"] = $value;
-			break;
-		}
-		elseif ($_REQUEST[$key1] && $_REQUEST[$key2]){
-			$_REQUEST["action"] = str_replace("_"," ", substr($key, 0, strlen($key) - 2));
 			break;
 		}
 	}
 }
 
 foreach($_REQUEST as $key => $value){
-	if (is_array(unserialize(stripslashes($value)))){
-		$_REQUEST[$key] = unserialize(stripslashes($value));
+	if (($temp = @unserialize(stripslashes($value))) != false){
+		if (is_array($temp)){
+			$_REQUEST[$key] = $temp;
+		}
 	}
 }
 

@@ -18,31 +18,31 @@ if ($_REQUEST["method"] == "from"){
 	$result = run_query($query);
 	$highest_folder = mysql_num_rows($result);
 	
-	$message_nav .= get_email_by_sender();
+	$message_nav = get_email_by_sender();
 }
 elseif ($_REQUEST["method"] == "to"){
 	$query = "SELECT `To` FROM `email` WHERE `user`=".$_SESSION["toby"]["userid"]." AND `To` != '' GROUP BY `To`";
 	$result = run_query($query);
 	$highest_folder = mysql_num_rows($result);
 	
-	$message_nav .= get_email_by_receiver();
+	$message_nav = get_email_by_receiver();
 }
 elseif ($_REQUEST["method"] == "folders"){
 	$query = "SELECT `id` FROM `email_folders` WHERE `user`='".$_SESSION["toby"]["userid"]."' ORDER BY `id` DESC LIMIT 1";
 	$result = run_query($query);
 	$highest_folder = mysql_result($result,0,'id');
 	
-	$message_nav .= get_email_by_folder();
+	$message_nav = get_email_by_folder();
 }
 elseif ($_REQUEST["method"] == "date"){
 	$query = "SELECT SUBSTRING(`niceDate`,1,6) AS `category` FROM `email` WHERE `user`=".$_SESSION["toby"]["userid"]." GROUP BY `category`";
 	$result = run_query($query);
 	$highest_folder = mysql_num_rows($result);
 	
-	$message_nav .= get_email_by_date();
+	$message_nav = get_email_by_date();
 }
 
-$output = '
+$output = $transdtd.'
 	<html>
 		<head>
 			<title>'.FOLDERS.'</title>
@@ -101,6 +101,8 @@ exit;
 
 function get_main_folders(){
 	global $wrapperpage;
+	
+	$output = '';
 	
 	$output .= '
 			<span class="folder_selected" id="inbox_folder" style="padding-left: 2px; display: block;" onclick="over(this);"> <img src="images/bullet.gif" style="width: 9px; height: 9px;" alt="*" />  <a href="'.$wrapperpage.'" target="wrapper">'.INBOX.'</a></span>

@@ -4,6 +4,8 @@
 // This page contains the setup for the main layout of the program.
 // It is the page that is called from the login screen.
 
+error_reporting(0);
+
 include_once("config.php");
 
 // If the "Remember me" box was checked, set the action and the username and password

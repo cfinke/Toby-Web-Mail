@@ -3,18 +3,21 @@
 // Preview listing file
 // This file should take care of the preview listings frame.
 
+error_reporting(0);
+
 include("globals.php");
 
+$onload = '';
 $num_rows = 0;
-
 $orderbys = array("From","Subject","To","niceDate");
 $directions = array("ASC","DESC");
+$message_rows = array();
 
-if (!in_array($_REQUEST["orderby"], $orderbys)){
+if (!isset($_REQUEST["orderby"]) || (!in_array($_REQUEST["orderby"], $orderbys))){
 	unset($_REQUEST["orderby"]);
 	$_REQUEST["orderby"] = "niceDate";
 }
-if (!in_array($_REQUEST["direction"], $directions)){
+if (!isset($_REQUEST["direction"]) || (!in_array($_REQUEST["direction"], $directions))){
 	unset($_REQUEST["direction"]);
 	$_REQUEST["direction"] = "DESC";
 }
@@ -47,7 +50,7 @@ switch ($_REQUEST["action"]){
 			$meta = '<meta http-equiv="refresh" content="'.($_SESSION["toby"]["refresh_interval"] * 60).'; url='.$_SERVER["PHP_SELF"].'?refresh=1">';
 		}
 		
-		if (($refresh == 1) && ($num_new > 0)){
+		if (isset($_REQUEST["refresh"]) && ($num_new > 0)){
 			$onload = ' onload="alert(\'You have '.$num_new.' new message';
 			if ($num_new > 1) $onload .= 's';
 			$onload .= '.\');"';
@@ -111,10 +114,14 @@ $output = $transdtd . '
 		</head>
 		<body'.$onload.'>
 			<form action="'.$wrapperpage.'" target="_parent" method="post" enctype="multipart/form-data" name="mainform" id="mainform">
-				<div id="nav">
-					<input type="hidden" name="sender" value="'.$_REQUEST["sender"].'" />
-					<input type="hidden" name="folder" value="'.$_REQUEST["folder"].'" />
-					<input type="hidden" name="oldaction" value="'.$_REQUEST["action"].'" />
+				<div id="nav">';
+
+if (isset($_REQUEST["sender"])) $output .= '<input type="hidden" name="sender" value="'.$_REQUEST["sender"].'" />';
+if (isset($_REQUEST["folder"])) $output .= '<input type="hidden" name="folder" value="'.$_REQUEST["folder"].'" />';
+else $_REQUEST["folder"] = 0;
+if (isset($_REQUEST["action"])) $output .= '<input type="hidden" name="oldaction" value="'.$_REQUEST["action"].'" />';
+
+$output .= '
 					<input type="submit" name="'.str_replace(" ","_",INBOX).'" value="'.INBOX.'" class="image_submit" style="background-image: url(\'images/inbox.gif\');" />
 					<input type="submit" name="'.str_replace(" ","_",COMPOSE).'" value="'.COMPOSE.'" class="image_submit" style="background-image: url(\'images/compose.gif\');" />
 					<input type="submit" name="'.str_replace(" ","_",REPLY).'" value="'.REPLY.'" class="image_submit" style="background-image: url(\'images/reply.gif\');" />
@@ -185,6 +192,9 @@ function get_message_rows($type, $subtype = '', $orderby = "niceDate", $directio
 	global $messagepage;
 	global $num_rows;
 	
+	$counter = 0;
+	$output = '';
+	
 	switch ($type){
 		case 'inbox':
 			$clause = " AND `folder` = 0 AND `user`=".$_SESSION["toby"]["userid"]." ";
@@ -223,7 +233,7 @@ function get_message_rows($type, $subtype = '', $orderby = "niceDate", $directio
 			
 			switch($orderby){
 				case 'niceDate':
-					if ($current_date != $message["date"]){
+					if (isset($current_date) && ($current_date != $message["date"])){
 						if ($old_rows != ''){
 							$output .= '
 								<tr class="date_header" style="display: auto;">
@@ -269,8 +279,12 @@ function get_message_rows($type, $subtype = '', $orderby = "niceDate", $directio
 			
 			$old_rows .= make_message_row($message);
 			
-			$current_date = $message["date"];
-			$current_letter = strtoupper(substr($message[$orderby], 0, 1));
+			if ($orderby == "niceDate"){
+				$current_date = $message["date"];
+			}
+			else{
+				$current_letter = strtoupper(substr($message[$orderby], 0, 1));
+			}
 		}
 		
 		switch($orderby){

@@ -121,9 +121,11 @@ $output .= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http
 echo $output;
 
 function attach_file($file){
+	global $temp_directory;
+	
 	if (is_file($file["tmp_name"])){
 		do{
-			$filename = '/tmp/'.rand();
+			$filename = $temp_directory.rand();
 		} while(is_file($filename));
 		
 		copy($file["tmp_name"], $filename);

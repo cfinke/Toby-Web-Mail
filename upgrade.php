@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(0);
+
 $path = $_SERVER["DOCUMENT_ROOT"] . $_SERVER["PHP_SELF"];
 $path = str_replace("upgrade.php","config.php",$path);
 
@@ -16,6 +18,8 @@ $database_password = "'.$database_password.'";
 $database_name = "'.$database_name.'";
 
 $admin_email = "'.$admin_email.'";
+
+$temp_directory = "/tmp/";
 
 $default_lang = "'.$_REQUEST["language"].'";
 
@@ -78,18 +82,6 @@ if ($_REQUEST["action"] == "do_upgrade"){
 			$query = "ALTER TABLE `email_users` ADD `lang` VARCHAR( 8 ) DEFAULT 'en' NOT NULL";
 			$result = @mysql_query($query);
 			
-			@system("chmod 777 ".$path);
-			
-			$handle = @fopen($path,"w");
-			if ($handle){
-				fwrite($handle, $write_to_config);
-				fclose($handle);
-				@system("chmod 755 ".$path);
-			}
-			else{
-				$errors[] = "Toby could not write the config.php file.  Either chmod this file to be writable by the Web server, or replace the contents of the current config.php file with the following code:<br /><pre>" . htmlentities($write_to_config) . "</pre>If you choose to overwrite the file manually, do so, and then delete the files install.php and upgrade.php, if they exist.  Don't forget to change the permissions back on config.php after you overwrite it. Otherwise, you can change the permissions on config.php and have the script attempt to overwrite it by clicking the 'Try Again' button.";
-			}
-			
 			break;
 		case '0.4':
 			$query = "ALTER TABLE `email` DROP INDEX `Content-Type`";
@@ -113,7 +105,21 @@ if ($_REQUEST["action"] == "do_upgrade"){
 			$result = @mysql_query($query);
 			
 			$query = "ALTER TABLE `email_users` ADD `refresh_interval` VARCHAR(4) DEFAULT '10' NOT NULL";
-			$result = @mysql_query($query);			
+			$result = @mysql_query($query);
+			
+			chmod($path, 0777);
+			
+			$handle = @fopen($path,"w");
+			if ($handle){
+				fwrite($handle, $write_to_config);
+				fclose($handle);
+				chmod($path,0755);
+				
+				$config_written = true;
+			}
+			else{
+				$errors[] = "Toby could not write the config.php file.  Either chmod this file to be writable by the Web server, or replace the contents of the current config.php file with the following code:<br /><pre>" . htmlentities($write_to_config) . "</pre>If you choose to overwrite the file manually, do so, and then delete the files install.php and upgrade.php, if they exist.  Don't forget to change the permissions back on config.php after you overwrite it. Otherwise, you can change the permissions on config.php and have the script attempt to overwrite it by clicking the 'Try Again' button.";
+			}
 			
 			break;
 	}
@@ -131,12 +137,12 @@ if ($_REQUEST["action"] == "do_upgrade"){
 	}
 }
 elseif($_REQUEST["action"] == "try_again"){
-	@system("chmod 777 ".$path);
+	chmod($path, 0777);
 	$handle = @fopen($path,"w");
 	if ($handle){
 		fwrite($handle, $write_to_config);
 		fclose($handle);
-		@system("chmod 755 ".$path);
+		chmod($path,0755);
 	}
 	else{
 		$errors[] = "Toby could not write the config.php file.  Either chmod this file to be writable by the Web server, or replace the contents of the current config.php file with the following code:<br /><pre>" . htmlentities($write_to_config) . "</pre>If you choose to overwrite the file manually, do so, and then delete the files install.php and upgrade.php, if they exist.  Don't forget to change the permissions back on config.php after you overwrite it.  Otherwise, you can change the permissions on config.php and have the script attempt to overwrite it by clicking the 'Try Again' button.";
@@ -152,6 +158,8 @@ elseif($_REQUEST["action"] == "try_again"){
 		header("Location: index.php");
 	}
 }
+
+$tmp_directory = ($_REQUEST["temp_directory"]) ? $_REQUEST["temp_directory"] : "/tmp/";
 
 $output .= '
 	<html>
@@ -219,6 +227,10 @@ else{
 									</select>
 								</td>
 							</tr>
+					<tr>
+						<td><label for="temp_directory">Temporary File Directory:</label></td>
+						<td><input type="text" name="temp_directory" id="temp_directory" value="'.$tmp_directory.'" /></td>
+					</tr>
 							<tr>
 								<td colspan="2" style="text-align: center;"><input type="submit" name="submit" value="Submit" /></td>
 							</tr>

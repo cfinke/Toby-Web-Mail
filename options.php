@@ -3,6 +3,8 @@
 // Settings file
 // This file should take care of the main settings page.
 
+error_reporting(0);
+
 include("globals.php");
 
 if ($_REQUEST["action"] == CHANGE_MAIN_SETTINGS){

@@ -4,6 +4,8 @@
 // This file is the wrapper for the right-hand frame that contains
 // the preview pane, message pane, composition frame...
 
+error_reporting(0);
+
 include("globals.php");
 
 switch($_REQUEST["action"]){
@@ -26,6 +28,8 @@ switch($_REQUEST["action"]){
 		send_message($_REQUEST);
 		header("Location: ".$wrapperpage);
 		exit;
+		break;
+	default:
 		break;
 }
 
@@ -126,7 +130,7 @@ function send_message($message){
 	}
 	
 	// Delete each of the files that were attached.
-	// Because these files live in the /tmp/ directory, they will be deleted eventually,
+	// Because these files live in a temporary files directory, they will be deleted eventually,
 	// but we delete them here just to be nice.
 	if (is_array($filenames)){
 		foreach($filenames as $file){

@@ -3,6 +3,8 @@
 // E-mail transfer file
 // This file should take care of transferring e-mail between Toby accounts.
 
+error_reporting(0);
+
 include("globals.php");
 
 if ($_REQUEST["action"] == TRANSFER_EMAIL){
