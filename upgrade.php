@@ -168,6 +168,9 @@ if ($_REQUEST["action"] == "upgrade"){
 				$query = "ALTER TABLE `email` ADD INDEX ( `In-Reply-To` ) ";
 				$result = @mysql_query($query);
 				
+				$query = "ALTER TABLE `email` ADD `sent` tinyint(1) NOT NULL default '0'";
+				$result = @mysql_query($query);
+				
 				// Attempt to write the config file.
 				@chmod($path."config.php", 0777);
 				

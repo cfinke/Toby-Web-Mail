@@ -145,6 +145,7 @@ if ($_REQUEST["action"] == "install"){
 			  `folder` int(11) NOT NULL default '0',
 			  `seen` tinyint(1) NOT NULL default '0',
 			  `temp` tinyint(1) NOT NULL default '0',
+			  `sent` tinyint(1) NOT NULL default '0', 
 			  UNIQUE KEY `id` (`id`),
 			  KEY `From` (`user`,`From`),
 			  KEY `folder` (`folder`)
