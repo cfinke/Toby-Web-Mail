@@ -1,0 +1,5 @@
+Upgrading to Toby Web Mail 0.4.2 from all previous versions
+========================================================================
+To upgrade to version 0.4.2 from all previous versions, simply overwrite all 
+of the files from the old version with the files from this version, and 
+then run the included upgrade.php script from your Web browser of choice.
