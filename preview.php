@@ -41,9 +41,19 @@ switch ($_REQUEST["action"]){
 		$_REQUEST["action"] = $_REQUEST["oldaction"];
 	case SEND:
 	default:
-		if ($_SESSION["toby"]["refresh_interval"] > 0) $meta = '<meta http-equiv="refresh" content="'.($_SESSION["toby"]["refresh_interval"] * 60).'; url='.$_SERVER["PHP_SELF"].'">';
+		$num_new = download_messages();
+		
+		if ($_SESSION["toby"]["refresh_interval"] > 0){
+			$meta = '<meta http-equiv="refresh" content="'.($_SESSION["toby"]["refresh_interval"] * 60).'; url='.$_SERVER["PHP_SELF"].'?refresh=1">';
+		}
+		
+		if (($refresh == 1) && ($num_new > 0)){
+			$onload = ' onload="alert(\'You have '.$num_new.' new message';
+			if ($num_new > 1) $onload .= 's';
+			$onload .= '.\');"';
+		}
+		
 		unset($_REQUEST["folder"]);
-		download_messages();
 		$message_rows = get_message_rows("inbox", '', $_REQUEST["orderby"],$_REQUEST["direction"]);
 		break;
 }
@@ -99,7 +109,7 @@ $output = $transdtd . '
 			</script>
 			'.$meta.'
 		</head>
-		<body>
+		<body'.$onload.'>
 			<form action="'.$wrapperpage.'" target="_parent" method="post" enctype="multipart/form-data" name="mainform" id="mainform">
 				<div id="nav">
 					<input type="hidden" name="sender" value="'.$_REQUEST["sender"].'" />
@@ -371,5 +381,3 @@ function make_message_row($message){
 }
 
 ?>
-
-

@@ -546,7 +546,7 @@ function build_query_string($request_array){
 	$querystring = '?action='.$request_array["action"];
 	
 	// exceptions[] is an array of $_REQUEST keys that should not be built into the query string
-	$exceptions = array("message", "action","PHPSESSID","toby_email","toby_pass","orderby","direction");
+	$exceptions = array("refresh","message", "action","PHPSESSID","toby_email","toby_pass","orderby","direction");
 	
 	foreach ($request_array as $key => $value){
 		// Add each $_REQUEST[] to the query string if it has a value
