@@ -233,6 +233,7 @@ table.nested {
 .date_header td {
 	background-color: #eeeeee;
 	color: #000000;
+	font-weight: bold;
 }
 
 
