@@ -48,7 +48,7 @@ class email_thread {
 		
 		if ($this->num_messages > 1){
 			$this->thread_nav = '
-				<div id="messages" style="padding-top: 10px;">
+				<div id="messages" style="padding-top: 10px; clear: both;">
 					<table cellspacing="0" style="border: thin solid #000000;">
 						<tr class="date_header">
 							<td colspan="5">Thread</td>
