@@ -3,7 +3,7 @@
 // Navigation file
 // This file should take care of the icon-based navigation.
 
-error_reporting(0);
+error_reporting(E_ALL ^ E_NOTICE);
 
 include("globals.php");
 

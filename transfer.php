@@ -3,7 +3,7 @@
 // E-mail transfer file
 // This file should take care of transferring e-mail between Toby accounts.
 
-error_reporting(0);
+error_reporting(E_ALL ^ E_NOTICE);
 
 include("globals.php");
 

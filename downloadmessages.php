@@ -4,7 +4,7 @@
 // This page should take care of anything having to do with downloading
 // message backups.
 
-error_reporting(0);
+error_reporting(E_ALL ^ E_NOTICE);
 
 include("globals.php");
 

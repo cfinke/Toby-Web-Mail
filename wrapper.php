@@ -4,7 +4,7 @@
 // This file is the wrapper for the right-hand frame that contains
 // the preview pane, message pane, composition frame...
 
-error_reporting(0);
+error_reporting(E_ALL ^ E_NOTICE);
 
 include("globals.php");
 

@@ -4,7 +4,7 @@
 // This page contains the setup for the main layout of the program.
 // It is the page that is called from the login screen.
 
-error_reporting(0);
+error_reporting(E_ALL ^ E_NOTICE);
 
 include_once("config.php");
 
@@ -20,7 +20,7 @@ include("globals.php");
 // If the user has never logged in here before, get their information.
 if ($_REQUEST["action"] == "initial_setup"){
 	// Attempt to determine their e-mail host.
-	//$foundhost = determine_host($_SESSION["toby"]["email_address"],$_SESSION["toby"]["pass"]);
+	$foundhost = determine_host($_SESSION["toby"]["email_address"],$_SESSION["toby"]["pass"]);
 	
 	$output .= '
 		<html>

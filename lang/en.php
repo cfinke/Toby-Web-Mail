@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(E_ALL ^ E_NOTICE);
+
 // Note: Only translate the second quoted word(s) in each "define(...)" line.
 // ie. in define('ADDRESS_BOOK','Addresses');, a translation might look like
 // define('ADDRESS_BOOK','Book del Addresses');

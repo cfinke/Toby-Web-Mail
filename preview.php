@@ -3,7 +3,7 @@
 // Preview listing file
 // This file should take care of the preview listings frame.
 
-error_reporting(0);
+error_reporting(E_ALL ^ E_NOTICE);
 
 include("globals.php");
 

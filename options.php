@@ -1,9 +1,9 @@
- <?php
+<?php
 
 // Settings file
 // This file should take care of the main settings page.
 
-error_reporting(0);
+error_reporting(E_ALL ^ E_NOTICE);
 
 include("globals.php");
 
