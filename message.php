@@ -13,6 +13,35 @@ if($_REQUEST["action"] == "arc"){
 	$thread_arc->export_image();
 	exit;
 }
+elseif($_REQUEST["action"] == "about_arc"){
+	$output = $transdtd.'
+		<html>
+			<head>
+				<title>'.WHAT_IS_THIS.'</title>
+				<link rel="stylesheet" type="text/css" href="style.css" />
+			</head>
+			<body style="padding: 10px;">
+				<h1>'.WHAT_IS_THIS.'</h1>
+				<img src="images/thread-arc.gif" alt="Thread Arc" style="float: left;" />
+				<p>'.WHAT_P1.'</p>
+				<p>'.WHAT_P2.'</p>
+				<p>'.WHAT_P3.'</p>
+				<ul style="margin-left: 100px;">
+					<li>'.WHAT_L1.'</li>
+					<li>'.WHAT_L2.'</li>
+					<li>'.WHAT_L3.'</li>
+					<li>'.WHAT_L4.'</li>
+					<li>'.WHAT_L5.'</li>
+					<li>'.WHAT_L6.'</li>
+					<li>'.WHAT_L7.'</li>
+				</ul>
+				<p>'.WHAT_P4_1.' <a href="http://www.research.ibm.com/remail/threadarcs.html">'.WHAT_P4_2.'</a> '.WHAT_P4_3.' <a href="http://domino.watson.ibm.com/library/cyberdig.nsf/1e4115aea78b6e7c85256b360066f0d4/7a30ed0aac59bf5d85256d79006f272f?OpenDocument">'.WHAT_P4_4.'</a></p>
+			</body>
+		</html>';
+	
+	echo $output;
+	exit;
+}
 
 if (isset($_REQUEST["id"])){
 	if($_REQUEST["action"] == 'get_old_attachment'){
@@ -25,6 +54,7 @@ if (isset($_REQUEST["id"])){
 		$thread_arc = new thread_arc($_REQUEST["id"]);
 		$map = $thread_arc->get_image_map();
 		$img = '<img src="'.$_SERVER["PHP_SELF"].'?action=arc&id='.$_REQUEST["id"].'" usemap="#arc_map" />';
+		$thread_nav = $message_thread->thread_nav;
 	}
 }
 else{
@@ -47,13 +77,20 @@ $output = '
 			<div id="messagebody">';
 
 if ($map){
-	$output .= '<div style="float: right; padding: 15px;">
+	$output .= '<div style="float: right; padding-left: 15px; padding-right: 15px; text-align: center;">
+					<small><a href="'.$_SERVER["PHP_SELF"].'?action=about_arc" target="_blank">What is this?</a></small><br />
 					'.$img.'
 					'.$map.'
 				</div>';
 }
 
-$output .= $message["body"].'
+$output .= $message["body"];
+
+if ($thread_nav){
+	$output .= $thread_nav;
+}
+
+$output .= '
 			</div>
 		</body>
 	</html>';

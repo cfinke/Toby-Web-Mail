@@ -46,13 +46,16 @@ class email_thread {
 		$row["sub_thread"] = $this->find_replies($this->parent_message);
 		$this->thread[] = $row;
 		
-		$this->thread_nav = $this->export_thread($this->thread);
-		
-		if ($this->thread_nav != ''){
+		if ($this->num_messages > 1){
 			$this->thread_nav = '
 				<div id="messages" style="padding-top: 10px;">
 					<table cellspacing="0" style="border: thin solid #000000;">
-						<tr class="date_header"><td colspan="5">Thread</td></tr>'.$this->thread_nav.'</table></div>';
+						<tr class="date_header">
+							<td colspan="5">Thread</td>
+						</tr>
+						'.$this->export_thread($this->thread).'
+					</table>
+				</div>';
 		}
 		
 		asort($this->flat_thread);
