@@ -198,13 +198,14 @@ class email_message {
 			$body = $this->parts[0]->data;
 		}
 		else{
+			$body = $this->parts[0]->data;
+
 			foreach($this->parts as $part){
 				if (($part->content_type == "text") && ($part->content_subtype == "html")){
 					$body = $part->data;
+					break;
 				}
 			}
-			
-			$body = $this->parts[0]->data;
 		}
 		
 		return $body;
