@@ -324,7 +324,7 @@ function num_attachments($i, $mailbox = false){
 		$num_attach = substr_count(imap_body($mailbox, $i),"filename=");
 	}
 	else{
-		$query = "SELECT `num_attachments` FROM `email` WHERE `id` = ".$i;
+		$query = "SELECT `num_attachments` FROM `email` WHERE `id` = '".$i."'";
 		$result = run_query($query);
 		
 		$num_attach = (mysql_num_rows($result) > 0) ? mysql_result($result, 0, 'num_attachments') : 0;
@@ -496,18 +496,21 @@ function get_senders($messages){
 	$senders = '';
 	
 	if (!is_array($messages)){
-		$messages = Array($_SESSION["toby"]["lastviewed"]);
+		$messages = array((int) $_SESSION["toby"]["lastviewed"]);
 	}
 	
 	foreach($messages as $message){
-		$query = "SELECT `From` FROM `email` WHERE `id`=".$message;
+		$query = "SELECT `From` FROM `email` WHERE `id`='".$message."'";
 		$result = run_query($query);
 		$row = mysql_fetch_array($result);
 		
-		$senders .= str_replace(",","",str_replace('"',"",$row["From"])) . ', ';
+		if ((mysql_num_rows($result) > 0) && ($row["From"] != "")){
+			$senders .= str_replace(",","",str_replace('"',"",$row["From"])) . ', ';
+		}
 	}
 	
-	return $senders;
+	if (strlen($senders) == 2) return;
+	else return $senders;
 }
 
 if (!function_exists('html_entity_decode')){

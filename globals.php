@@ -75,7 +75,7 @@ if ($_REQUEST["action"] == LOG_IN){
 		$_SESSION["toby"]["compose_type"] = $row["compose_type"];
 		$_SESSION["toby"]["lang"] = $row["lang"];
 		$_SESSION["toby"]["refresh_interval"] = $row["refresh_interval"];
-		
+
 		// If the remember me box was checked, set the appropriate cookies.
 		if ($_REQUEST["remember"] == "yes"){
 			setcookie("toby_email",$_SESSION["toby"]["email_address"],(time() + (365 * 3600 * 24)));

@@ -4,11 +4,13 @@
 // This file should take care of anything having to do with composing
 // email messages.
 
+error_reporting(E_ALL ^ E_NOTICE);
+
 include("globals.php");
 
 // If the user is entering the composition page for the first time, clear
 // the compose session variable.
-if (($_REQUEST["action"] == COMPOSE) && (!isset($_REQUEST["frompage"]) && ($_REQUEST["frompage"] != "attachments"))){
+if (($_REQUEST["action"] == COMPOSE) && ($_REQUEST["frompage"] != "attachments")){
 	unset($_SESSION["toby"]["compose"]);
 	
 	if (isset($_REQUEST["compose_to"])){
@@ -43,7 +45,7 @@ switch($_REQUEST["action"]){
 		$query = "SELECT `Message-ID` FROM `email` WHERE `id`='".$id."'";
 		$result = run_query($query);
 		
-		$in_reply_to = mysql_result($result, 0, 'Message-ID');
+		if (mysql_num_rows($result) > 0) $in_reply_to = mysql_result($result, 0, 'Message-ID');
 	case FORWARD:
 		if (count($dmsg) > 0){
 			$msgnum = $_REQUEST["dmsg"][0];
@@ -102,7 +104,7 @@ if (isset($_REQUEST["frompage"]) && ($_REQUEST["frompage"] == "attachments")){
 	}
 }
 
-$query = "SELECT `sent_folder`,`save_sent` FROM `email_users` WHERE `id`=".$_SESSION["toby"]["userid"];
+$query = "SELECT `sent_folder`,`save_sent` FROM `email_users` WHERE `id`='".$_SESSION["toby"]["userid"]."'";
 $result = run_query($query);
 
 if ($_SESSION["toby"]["compose"]["save_message_in"]){
@@ -121,7 +123,7 @@ if (!isset($checked)){
 	}
 }
 
-$query = "SELECT * FROM `email_address_book` WHERE `userid`=".$_SESSION["toby"]["userid"]." ORDER BY `name`";
+$query = "SELECT * FROM `email_address_book` WHERE `userid`='".$_SESSION["toby"]["userid"]."' ORDER BY `name`";
 $result = run_query($query);
 
 while ($row = mysql_fetch_array($result)){
@@ -346,18 +348,21 @@ function get_ccd($messages){
 	$ccs = '';
 	
 	if (!is_array($messages)){
-		$messages = Array($_SESSION["toby"]["lastviewed"]);
+		$messages = array($_SESSION["toby"]["lastviewed"]);
 	}
 	
 	foreach($messages as $message){
-		$query = "SELECT `Cc` FROM `email` WHERE `id`=".$message;
+		$query = "SELECT `Cc` FROM `email` WHERE `id`='".$message."'";
 		$result = run_query($query);
 		$row = mysql_fetch_array($result);
 		
-		$senders .= (strlen(trim($row["Cc"])) > 0) ? str_replace(",","",str_replace('"',"",$row["Cc"])) . ', ' : '';
+		if ((mysql_num_rows($result) > 0) && ($row["Cc"] != "")){
+			$ccs .= str_replace(",","",str_replace('"',"",$row["Cc"])) . ', ';
+		}
 	}
 	
-	return $ccs;
+	if (strlen($ccs) == 2) return;
+	else return $ccs;
 }
 
 function get_receivers($messages){
@@ -370,14 +375,17 @@ function get_receivers($messages){
 	}
 	
 	foreach($messages as $message){
-		$query = "SELECT `To` FROM `email` WHERE `id`=".$message;
+		$query = "SELECT `To` FROM `email` WHERE `id`='".$message."'";
 		$result = run_query($query);
 		$row = mysql_fetch_array($result);
 		
-		$receivers .= (strlen(trim($row["To"])) > 0) ? str_replace(",","",str_replace('"',"",$row["To"])) . ', ' : '';
+		if ((mysql_num_rows($result) > 0) && ($row["To"] != "")){
+			$receivers .= str_replace(",","",str_replace('"',"",$row["To"])) . ', ';
+		}
 	}
 	
-	return $receivers;
+	if (strlen($receivers) == 2) return;
+	else return $receivers;
 }
 
 function get_reply_message($messages, $type = "text"){
@@ -419,19 +427,19 @@ function get_reply_header($message_id, $type = "text"){
 		
 		$row = mysql_fetch_array($result, MYSQL_ASSOC);
 		
-		if ($type == "text"){
-			$header .= "----- ".ORIGINAL_MESSAGE." -----\n";
-			$header .= FROM.": ".$row["From"]."\n";
-			$header .= SEND_TO.": ".$row["To"]."\n";
-			$header .= SENT.": ".$row["Date"]."\n";
-			$header .= SUBJECT.": ".$row["Subject"]."\n\n";
-		}
-		elseif ($type == "html"){
+		if ($type == "html"){
 			$header .= "----- ".ORIGINAL_MESSAGE." -----<br />\n";
 			$header .= FROM.": ".htmlentities(htmlentities($row["From"]))."<br />\n";
 			$header .= SEND_TO.": ".htmlentities(htmlentities($row["To"]))."<br />\n";
 			$header .= SENT.": ".$row["Date"]."<br />\n";
 			$header .= SUBJECT.": ".$row["Subject"]."<br />\n<br />\n";
+		}
+		else{
+			$header .= "----- ".ORIGINAL_MESSAGE." -----\n";
+			$header .= FROM.": ".$row["From"]."\n";
+			$header .= SEND_TO.": ".$row["To"]."\n";
+			$header .= SENT.": ".$row["Date"]."\n";
+			$header .= SUBJECT.": ".$row["Subject"]."\n\n";
 		}
 		
 		return $header;
@@ -439,7 +447,17 @@ function get_reply_header($message_id, $type = "text"){
 }
 
 function get_reply_body($message_id, $type = "text"){
-	if ($type == "text"){
+	if ($type == "html"){
+		$body = get_html_body($message_id);
+		
+		if (strlen(trim($body)) == 0){
+			return str_replace("\n","<br />\n",htmlentities(get_reply_body($message_id, "text")));
+		}
+		else{
+			return $body;
+		}
+	}
+	else{
 		$wrap_length = 64;
 		
 		$body .= get_text_body($message_id);
@@ -484,26 +502,16 @@ function get_reply_body($message_id, $type = "text"){
 		
 		return trim($newbody);
 	}
-	elseif ($type == "html"){
-		$body = get_html_body($message_id);
-		
-		if (strlen(trim($body)) == 0){
-			return str_replace("\n","<br />\n",htmlentities(get_reply_body($message_id, "text")));
-		}
-		else{
-			return $body;
-		}
-	}
 }
 
 function get_subject($messages, $prefix=''){
 	## This function returns the subject of a specified message.
 	
 	if (!is_array($messages)){
-		$messages = Array($_SESSION["toby"]["lastviewed"]);
+		$messages = array((int) $_SESSION["toby"]["lastviewed"]);
 	}
 	
-	$query = "SELECT `Subject` FROM `email` WHERE `id`=".$messages[0];
+	$query = "SELECT `Subject` FROM `email` WHERE `id`='".$messages[0]."'";
 	$result = run_query($query);
 	
 	$subject = (mysql_num_rows($result) > 0) ? trim($prefix) . ' ' . mysql_result($result, 0, "Subject") : "";
