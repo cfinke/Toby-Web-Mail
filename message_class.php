@@ -195,7 +195,7 @@ class email_message {
 	
 	function export_html_body(){
 		if (!$this->is_multipart){
-			$body = $this->parts[0]->data;
+			$body = '';
 		}
 		else{
 			$body = $this->parts[0]->data;

@@ -418,7 +418,7 @@ function get_reply_body($message_id, $type = "text"){
 			return str_replace("\n","<br />\n",htmlentities(get_reply_body($message_id, "text")));
 		}
 		else{
-			return $body;
+			return '<div style="border-width: 0px 0px 0px 2px; border-style: solid; border-color: #666666; margin: 0ex 0ex 0ex 1ex; padding: 0ex 0ex 0ex 1ex;">'.$body.'</div>';
 		}
 	}
 	else{

@@ -3,14 +3,14 @@
 // These are temporary values.  If you can read this line,
 // you haven't run the install or upgrade script.
 
-$database_host = "localhost";
-$database_user = "localhost";
-$database_password = "localhost";
-$database_name = "localhost";
+$database_host = "";
+$database_user = "";
+$database_password = "";
+$database_name = "";
 
-$admin_email = "chris@efinke.com";
+$admin_email = "";
 
-$temp_directory = "/tmp/";
+$temp_directory = "";
 
 $default_lang = "en";
 

@@ -1,6 +1,9 @@
-Upgrading to Toby Web Mail 0.5 from all previous versions
+Upgrading to Toby Web Mail 0.5.1 from all previous versions
 ========================================================================
-To upgrade to version 0.5 from all previous versions, simply overwrite all 
+To upgrade to version 0.5.1 from version 0.5, simply upload all of the new
+files to your web space, overwriting the old files.
+
+To upgrade to version 0.5.1 from versions before 0.5, simply overwrite all 
 of the files from the old version with the files from this version, and 
 then run the included upgrade.php script from your Web browser of choice.
 
