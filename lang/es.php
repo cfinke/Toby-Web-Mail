@@ -1,5 +1,33 @@
 <?php
 
+// This is the Spanish language file for Toby Web Mail.
+//
+// Because different languages have different rules for grammar, the context
+// of each word or phrase is shown above it.  This is to show the tense
+// and voice of any verbs used in the word or phrase, as well as distinguish
+// between homonyms (words that are spelled the same but have different 
+// meanings.
+//
+// To translate Toby, translate each of the lines to your choice of language,
+// using the context lines as a guide.  *DO NOT CHANGE THE CAPITALIZED WORDS.*
+// These are keywords used by Toby to reference the translated phrases. For
+// example, to translate the line
+//
+// define('ADDRESS_BOOK','Addresses');
+//
+// into Spanish, you might change it to
+//
+// define('ADDRESS_BOOK','Direcciones');
+//
+// where 'Direcciones' is the Spanish equivalent to the English word "Addresses."
+// (This may or may not be correct.  I only have a basic understanding of Spanish.
+//
+// If you would like to help in the translation of Toby, feel free to e-mail a 
+// translated version of this file to chris@efinke.com, or contact chris@efinke.com
+// for more information.  (You may wish to e-mail before doing any work on it,
+// because someone else may already be translating to your language.)
+
+// Months of the Year, pretty self-explanatory
 $months = array(1=>"Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
 
 // Technically, all of these values should be unique, but 
@@ -123,7 +151,6 @@ define('VIEW_HTML','Mensaje de la visión en HTML');
 define('VIEW_HTML_SHORT','H');
 
 define('NAVIGATION','Navegación');
-define('DISABLED','Lisiado');
 define('OPTIONS','Opciones');
 define('DELETE_STRING','Suprima');
 define('TRANSFER_EMAIL','Transfiera E-mail');
