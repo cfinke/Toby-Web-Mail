@@ -619,5 +619,4 @@ function connect_to_mailbox(){
 	return $mailbox;
 }
 
-
 ?>

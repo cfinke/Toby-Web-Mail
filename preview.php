@@ -321,7 +321,23 @@ function get_message_rows($type, $subtype = '', $orderby = "niceDate", $directio
 	return $output;
 }
 
-function get_message_array($row, $counter){
+function make_message_row($message){
+	## This function creates a listing row for the specified $message.
+	
+	$row = '
+		<tr class="row_unselected" id="message_row_'.$message["num"].'" onclick="over(this);" style="display: auto;">
+			<td class="checkbox"><input type="checkbox" name="dmsg[]" value="'.$message["id"].'" /></td>
+			<td class="date"><abbr title="'.date("l F j, Y",$message["unix_time"]).' '.$message["time"].'">'.$message["time"].'</abbr></td>
+			<td class="from">'.$message["from"].'&nbsp;</td>
+			<td class="attachment">'.$message["attachment"].'</td>
+			<td class="subject"><a href="'.$message["viewlink"].'" target="message" class="'.$message["class"].'">'.$message["subject"].'</a></td>
+			<td class="to">'.$message["to"].'</td>
+		</tr>';
+	
+	return $row;
+}
+
+function get_message_array($row, $counter = 0){
 	global $messagepage;
 	
 	$from_length = 25;
@@ -335,31 +351,41 @@ function get_message_array($row, $counter){
 	$message["id"] = $row["id"];
 	$message["attachment"] = ($row["num_attachments"] > 0) ? '<img src="images/attachsmall.gif" alt="'.ATTACHMENT.'"/>' : '&nbsp;';
 	$message["subject"] = (strlen(trim($row["Subject"])) == 0) ? '['.NO_SUBJECT.']' : $row["Subject"];
-	$message["viewlink"] = $messagepage.'?id='.$row["id"];
+	$message["viewlink"] = $messagepage.'?id='.$message["id"];
 	$message["viewlink"] .= ($row["has_html"] == 1) ? '&amp;action=view_html' : '&amp;action=view';
 	$message["date"] = substr($row["niceDate"],0,4).' '.substr($row["niceDate"],4,2).' '.substr($row["niceDate"],6,2);
-	$message["timestamp"] = $row["niceDate"];
 	$message["unix_time"] = $row["unix_time"];
 	$message["To"] = $row["To"];
 	$message["From"] = $row["From"];
+	$message["niceDate"] = $row["niceDate"];
 	$message["Subject"] = $row["Subject"];
+	$message["class"] = ($row["seen"]) ? 'seen' : 'unseen';
+	
+	$meridian = (substr($message["niceDate"],8,2) > 11) ? 'PM' : 'AM';
+	$message["time"] = (((substr($message["niceDate"],8,2) - 1) % 12) + 1);
+	if ($message["time"] == '0') $message["time"] = '12';
+	$message["time"] .= ':' . substr($message["niceDate"],10,2) . ' ' . $meridian;
 	
 	$message["from"] = '<abbr title="'.htmlentities($row["From"]).'">';
+	
 	if (strlen($nicefrom) > $from_length){
 		$message["from"] .= substr($nicefrom, 0, $from_length - 2) . '...';
 	}
 	else{
 		$message["from"] .= $nicefrom;
 	}
+	
 	$message["from"] .= '</abbr>';
 	
 	$message["to"] = '<abbr title="'.htmlentities($row["To"]).'">';
+	
 	if (strlen($niceto) > $to_length){
 		$message["to"] .= substr($niceto, 0, $to_length - 2) . '...';
 	}
 	else{
 		$message["to"] .= $niceto;
 	}
+	
 	$message["to"] .= '</abbr>';
 	
 	if (strlen($message["subject"]) > $subject_length){
@@ -369,29 +395,6 @@ function get_message_array($row, $counter){
 	$message["seen"] = $row["seen"];
 	
 	return $message;
-}
-
-function make_message_row($message){
-	## This function creates a listing row for the specified $message.
-	
-	$class = ($message["seen"]) ? 'seen' : 'unseen';
-	
-	$meridian = (substr($message["timestamp"],8,2) > 11) ? 'PM' : 'AM';
-	$time = (((substr($message["timestamp"],8,2) - 1) % 12) + 1);
-	if ($time == '0') $time = '12';
-	$time .= ':' . substr($message["timestamp"],10,2) . ' ' . $meridian;
-	
-	$row = '
-		<tr class="row_unselected" id="message_row_'.$message["num"].'" onclick="over(this);" style="display: auto;">
-			<td class="checkbox"><input type="checkbox" name="dmsg[]" value="'.$message["id"].'" /></td>
-			<td class="date"><abbr title="'.date("l F j, Y",$message["unix_time"]).' '.$time.'">'.$time.'</abbr></td>
-			<td class="from">'.$message["from"].'&nbsp;</td>
-			<td class="attachment">'.$message["attachment"].'</td>
-			<td class="subject"><a href="'.$message["viewlink"].'" target="message" class="'.$class.'">'.$message["subject"].'</a></td>
-			<td class="to">'.$message["to"].'</td>
-		</tr>';
-	
-	return $row;
 }
 
 ?>
