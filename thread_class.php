@@ -5,11 +5,17 @@ class email_thread {
 	var $thread;
 	var $this_id;
 	var $thread_nav;
+	var $num_messages = 1;
+	var $node_id = 1;
+	var $flat_thread = array();
+	var $unseen = array();
+	var $sent = array();
 	
 	function email_thread($id){
+		if (!$id) return;
 		$this->id = $id;
 		
-		$query = "SELECT *,UNIX_TIMESTAMP(`niceDate`) AS `unix_time` FROM `email` WHERE `id`='".$id."'";
+		$query = "SELECT  `id` , `From` , `To` , `Subject` , `Message-ID` , `In-Reply-To` , `Date` , `niceDate` , `seen`,`sent` ,UNIX_TIMESTAMP(`niceDate`) AS `unix_time` FROM `email` WHERE `id`='".$id."'";
 		$result = run_query($query);
 		$row = mysql_fetch_array($result, MYSQL_ASSOC);
 		
@@ -20,7 +26,7 @@ class email_thread {
 			$row["selected"] = true;
 		}
 		else{
-			$query = "SELECT *,UNIX_TIMESTAMP(`niceDate`) AS `unix_time` FROM `email` WHERE `Message-ID` = '".$this->parent_message."'";
+			$query = "SELECT  `id` , `From` , `To` , `Subject` , `Message-ID` , `In-Reply-To` , `Date` , `niceDate` , `seen`,`sent` ,UNIX_TIMESTAMP(`niceDate`) AS `unix_time` FROM `email` WHERE `Message-ID` = '".$this->parent_message."'";
 			$result = run_query($query);
 			
 			if (mysql_num_rows($result) == 0){
@@ -32,6 +38,11 @@ class email_thread {
 			}
 		}
 		
+		$row["thread_id"] = "node".$this->node_id++;		
+		if ($row["seen"] == 0) $this->unseen[] = $row["thread_id"];
+		if ($row["sent"] == 1) $this->sent[] = $row["thread_id"];
+		$this->flat_thread[$row["thread_id"]] = $row["niceDate"];
+		$row["generation"] = 0;
 		$row["sub_thread"] = $this->find_replies($this->parent_message);
 		$this->thread[] = $row;
 		
@@ -43,6 +54,8 @@ class email_thread {
 					<table cellspacing="0" style="border: thin solid #000000;">
 						<tr class="date_header"><td colspan="5">Thread</td></tr>'.$this->thread_nav.'</table></div>';
 		}
+		
+		asort($this->flat_thread);
 	}
 	
 	function find_parent($in_reply_to){
@@ -60,13 +73,22 @@ class email_thread {
 		return $in_reply_to;
 	}
 	
-	function find_replies($message_id){
-		$query = "SELECT *,UNIX_TIMESTAMP(`niceDate`) AS `unix_time` FROM `email` WHERE `In-Reply-To`='".$message_id."' AND `In-Reply-To` != '' AND `user`='".$_SESSION["toby"]["userid"]."' GROUP BY `Message-ID` ORDER BY `niceDate` ASC";
+	function find_replies($message_id, $generation = 0){
+		$query = "SELECT  `id` , `From` , `To` , `Subject` , `Message-ID` , `In-Reply-To` , `Date` , `niceDate` , `seen`,`sent` ,UNIX_TIMESTAMP(`niceDate`) AS `unix_time` FROM `email` WHERE `In-Reply-To`='".$message_id."' AND `In-Reply-To` != '' AND `user`='".$_SESSION["toby"]["userid"]."' GROUP BY `Message-ID` ORDER BY `niceDate` ASC";
 		$result = run_query($query);
+		$generation++;
 		
 		while ($row = mysql_fetch_array($result, MYSQL_ASSOC)){
+			$this->num_messages++;
+			$row["thread_id"] = "node".$this->node_id++;
+			$row["generation"] = $generation;
+			$this->flat_thread[$row["thread_id"]] = $row["niceDate"];
+			if ($row["seen"] == 0) $this->unseen[] = $row["thread_id"];
+			if ($row["sent"] == 1) $this->sent[] = $row["thread_id"];
+			
 			if ($row["id"] == $this->id) $row["selected"] = true;
-			$temp_messages = $this->find_replies($row["Message-ID"]);
+			else $row["selected"] = false;
+			$temp_messages = $this->find_replies($row["Message-ID"], $generation);
 			
 			if ($temp_messages != ''){
 				$row["sub_thread"] = $temp_messages;

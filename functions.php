@@ -40,12 +40,12 @@ function save_sent($message, $folder = 0){
 	$headers = trim($message_parts[0]);
 	$body = trim($message_parts[1]);
 	
-	write_message_to_database($headers, $body, $folder, 1);
+	write_message_to_database($headers, $body, $folder, 1, 1);
 	
 	return;
 }
 
-function write_message_to_database($headers, $body, $folder = 0, $save_override = 0){
+function write_message_to_database($headers, $body, $folder = 0, $save_override = 0, $sent = 0){
 	// This function writes a message to the database.
 	
 	if ($save_override == 1){
@@ -59,6 +59,10 @@ function write_message_to_database($headers, $body, $folder = 0, $save_override 
 	//$headers = $msg->export_headers();
 	//$body = $msg->export_body();
 	$length = strlen($body);
+	
+	if (!isset($msg->parsed_headers["In-Reply-To"]) && isset($msg->parsed_headers["References"])){
+		$msg->parsed_headers["In-Reply-To"] = $msg->parsed_headers["References"];
+	}
 	
 	$query = "INSERT INTO `email` 
 				(`Return-Path`,
@@ -78,7 +82,8 @@ function write_message_to_database($headers, $body, $folder = 0, $save_override 
 				 `has_html`,
 				 `folder`,
 				 `temp`,
-				 `niceDate`) 
+				 `niceDate`,
+				 `sent`) 
 				 VALUES 
 				 ('".str_replace("'","\'",$msg->parsed_headers["Return-Path"])."',
 				  '".str_replace("'","\'",$msg->parsed_headers["From"])."',
@@ -97,7 +102,8 @@ function write_message_to_database($headers, $body, $folder = 0, $save_override 
 				  '".(((int) $msg->has_html) / 1)."',
 				  '".$folder."',
 				  '".$temp."',
-				  '".make_timestamp_from_date($msg->parsed_headers["Date"])."')";
+				  '".make_timestamp_from_date($msg->parsed_headers["Date"])."',
+				  '".$sent."')";
 	$result = run_query($query);
 	
 	$id = mysql_insert_id();
@@ -617,6 +623,19 @@ function connect_to_mailbox(){
 	$mailbox = imap_open('{'.$_SESSION["toby"]["host"].':'.$_SESSION["toby"]["port"].$_SESSION["toby"]["protocol"].'}INBOX', $_SESSION["toby"]["user"], $_SESSION["toby"]["pass"]) or die('Could not connect to '.$_SESSION["toby"]["texthost"].' ('.$_SESSION["toby"]["host"].':'.$_SESSION["toby"]["port"].') with username '.$_SESSION["toby"]["user"].': <a href="'.$loginpage.'" target="_top">Login again</a>');
 	
 	return $mailbox;
+}
+
+function count_r($arg){
+	if ($arg){
+		if(!is_array($arg)){
+			return 1;
+		}
+		foreach($arg as $key => $val){
+			$count += count_r($val);
+		}
+		
+		return $count;
+	}
 }
 
 ?>

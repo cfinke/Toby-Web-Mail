@@ -161,7 +161,6 @@ function email($to, $subject, $message, $cc, $bcc, $filenames, $compose_type = "
 	
 	if (strlen(trim($in_reply_to)) > 0)	$headers .= "In-Reply-To: ".$in_reply_to."\n";
 	
-	$headers .=
 	$optional_headers .= "Subject: ".$subject."\n";
 	
 	if (is_array($filenames) || ($compose_type == "html")){
