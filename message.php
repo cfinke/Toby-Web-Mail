@@ -26,7 +26,7 @@ elseif($_REQUEST["action"] == "about_arc"){
 				<p>'.WHAT_P1.'</p>
 				<p>'.WHAT_P2.'</p>
 				<p>'.WHAT_P3.'</p>
-				<ul style="margin-left: 100px;">
+				<ul>
 					<li>'.WHAT_L1.'</li>
 					<li>'.WHAT_L2.'</li>
 					<li>'.WHAT_L3.'</li>
@@ -78,7 +78,7 @@ $output = '
 
 if ($map){
 	$output .= '<div style="float: right; padding-left: 15px; padding-right: 15px; text-align: center;">
-					<small><a href="'.$_SERVER["PHP_SELF"].'?action=about_arc" target="_blank">What is this?</a></small><br />
+					<small><a href="javascript:void(0);" onclick="window.open(\''.$_SERVER["PHP_SELF"].'?action=about_arc\',\'about_arc\',config=\'height=500,width=600,toolbar=0,menubar=0,scrollbars=1,resizable=1,status=1,location=0,directories=0\');">What is this?</a></small><br />
 					'.$img.'
 					'.$map.'
 				</div>';
