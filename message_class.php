@@ -19,23 +19,41 @@ class email_message {
 			
 			$i = count($this->parts) - 1;
 			
-			while ($i >= 0){
+			// Check for multipart parts
+			while ($i >= 0){			
 				if ($this->parts[$i]->is_multipart){
+					// Find out how many subparts the part has.
 					$num_parts = count($this->parts[$i]->email_message->parts);
-					$old_size = count($this->parts);
-					$new_size = $num_parts - 1 + $old_size;
 					
+					// Add any attachments found in this part to the main part.
 					$this->num_attachments += $this->parts[$i]->email_message->num_attachments;
+					
+					// If this part has html, then the whole message does.
 					$this->has_html = ($this->parts[$i]->email_message->has_html) ? true : $this->has_html;
 					
-					for($j = $old_size - 1; $j > $i; $j--){
-						$this->parts[$j + $i] = $this->parts[$j];
+					// Initialize the new_parts.  This is important.
+					$new_parts = array();
+					
+					// Copy over the first parts up until the current part.
+					for($x = 0; $x < $i; $x++){
+						$new_parts[] = $this->parts[$x];
 					}
 					
-					for ($j = $num_parts - 1; $j >= 0; $j--){
-						$this->parts[$j + $i] = $this->parts[$i]->email_message->parts[$j];
+					// Copy the subparts as new main parts.
+					for ($x = 0; $x < $num_parts; $x++){
+						$new_parts[] = $this->parts[$i]->email_message->parts[$x];
 					}
 					
+					// Copy over the remaining parts.
+					for ($x = $i + 1; $x < count($this->parts); $x++){
+						$new_parts[] = $this->parts[$x];
+					}
+					
+					// Replace the old parts with the new parts.
+					$this->parts = $new_parts;
+					
+					// Increase $i to the last subpart of this part.
+					// This allows for recursively checking for subparts.
 					$i += $num_parts;
 				}
 				
@@ -223,8 +241,12 @@ class message_part {
 			if (stristr($part_data,"Content-Type") !== false){
 				$this->content_type = explode("Content-Type:",$part_data,2);
 				$this->content_type = $this->content_type[1];
-				$this->content_type = explode(";",$this->content_type, 2);
-				$this->content_type = trim(str_replace('"',"",$this->content_type[0]));
+				
+				if (strstr($this->content_type, ";")){
+					$this->content_type = explode(";",$this->content_type, 2);
+					$this->content_type = trim(str_replace('"',"",$this->content_type[0]));
+				}
+					
 				$this->content_type = explode("/",$this->content_type, 2);
 				$this->content_subtype = strtolower($this->content_type[1]);
 				$this->content_type = strtolower($this->content_type[0]);
