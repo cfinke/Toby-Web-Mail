@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 // Settings file
 // This file should take care of the main settings page.
@@ -114,7 +114,7 @@ $output .= '				</select>
 echo $output;
 exit;
 
-function update_settings($realname,$email_address,$save, $save_sent, $compose_type, $lang, $timezone){
+function update_settings($realname,$email_address,$save, $save_sent, $compose_type, $lang, $timezone, $refresh_interval){
 	$_SESSION["toby"]["realname"] = $realname;
 	$_SESSION["toby"]["email_address"] = $email_address;
 	$_SESSION["toby"]["save"] = $save;
@@ -122,7 +122,7 @@ function update_settings($realname,$email_address,$save, $save_sent, $compose_ty
 	$_SESSION["toby"]["lang"] = $lang;
 	$_SESSION["toby"]["refresh_interval"] = $refresh_interval;
 	
-	$query = "UPDATE `email_users` SET `save_sent`=".($save_sent / 1).",`save_messages`=".($save / 1).", `realname`='".$realname."', `email_address`='".$email_address."',`compose_type`='".$compose_type."',`lang`='".$lang."',`timezone`='".$timezone."',`refresh_interval`='".((int) ($refresh_interval / 1).'" WHERE `id`=".$_SESSION["toby"]["userid"];
+	$query = "UPDATE `email_users` SET `save_sent`=".($save_sent / 1).",`save_messages`=".($save / 1).", `realname`='".$realname."', `email_address`='".$email_address."',`compose_type`='".$compose_type."',`lang`='".$lang."',`timezone`='".$timezone."',`refresh_interval`='".((int) ($refresh_interval / 1))."' WHERE `id`=".$_SESSION["toby"]["userid"];
 	$result = run_query($query);
 	
 	return;
