@@ -9,13 +9,38 @@ class email_message {
 	var $num_attachments = 0;
 	
 	function email_message($headers, $body){
-		$this->boundary = $this->get_boundary($headers);
+		$this->boundary = get_boundary($headers);
 		
-		$this->parsed_headers = $this->parse_headers($headers);
+		$this->parsed_headers = parse_headers($headers);
 		
 		if ($this->boundary != ''){
 			$this->is_multipart = true;
 			$this->parts = $this->create_parts($body);
+			
+			$i = count($this->parts) - 1;
+			
+			while ($i >= 0){
+				if ($this->parts[$i]->is_multipart){
+					$num_parts = count($this->parts[$i]->email_message->parts);
+					$old_size = count($this->parts);
+					$new_size = $num_parts - 1 + $old_size;
+					
+					$this->num_attachments += $this->parts[$i]->email_message->num_attachments;
+					$this->has_html = ($this->parts[$i]->email_message->has_html) ? true : $this->has_html;
+					
+					for($j = $old_size - 1; $j > $i; $j--){
+						$this->parts[$j + $i] = $this->parts[$j];
+					}
+					
+					for ($j = $num_parts - 1; $j >= 0; $j--){
+						$this->parts[$j + $i] = $this->parts[$i]->email_message->parts[$j];
+					}
+					
+					$i += $num_parts;
+				}
+				
+				$i--;
+			}
 		}
 		elseif(stristr($this->parsed_headers["Content-Type"], "text/html") !== false){
 			$this->boundary = md5(uniqid(time()));
@@ -45,49 +70,6 @@ class email_message {
 			$this->parts[0]->content_disposition = "inline";
 			$this->parts[0]->data = $this->parts[0]->clean_text($this->parts[0]->data);
 		}
-	}
-	
-	function get_boundary($headers){
-		if (stristr($headers, "boundary=") !== false){
-			$boundary = explodei("boundary=",$headers,2);
-			$boundary = $boundary[1];
-			$boundary = explode("\n",$boundary,2);
-			$boundary = $boundary[0];
-			$boundary = str_replace('"',"",$boundary);
-			$boundary = str_replace("'","",$boundary);
-		}
-		
-		return trim($boundary);
-	}
-	
-	function parse_headers($headers){
-		$parsed_headers = array();
-		$headers = preg_replace("/Message-ID/i","Message-ID", $headers);
-		$header_array = explode("\n",$headers);
-		
-		foreach($header_array as $line){
-			$headerstuff = explode(":", $line, 2);
-			$newheadertype = trim($headerstuff[0]);
-			$newheadervalue = trim($headerstuff[1]);
-			
-			if (!isset($parsed_headers[$newheadertype])){
-				if (ctype_upper(substr($newheadertype, 0, 1)) && count($headerstuff) == 2){
-					$headertype = $newheadertype;
-					$headervalue = $newheadervalue;
-					
-					if ((strtoupper($headertype) != "SUBJECT") && (strtoupper($headertype) != "CONTENT-TYPE")){
-						$headervalue = str_replace("'","",str_replace('"',"",$headervalue));
-					}
-					
-					$parsed_headers[$headertype] = $headervalue;
-				}
-				else{
-					$parsed_headers[$headertype] .= ' ' . trim($line);
-				}
-			}
-		}
-		
-		return $parsed_headers;
 	}
 	
 	function create_parts($body){
@@ -199,7 +181,7 @@ class email_message {
 		}
 		else{
 			$body = $this->parts[0]->data;
-
+			
 			foreach($this->parts as $part){
 				if (($part->content_type == "text") && ($part->content_subtype == "html")){
 					$body = $part->data;
@@ -221,63 +203,79 @@ class message_part {
 	var $content_transfer_encoding;
 	var $charset;
 	var $data;
+	var $parsed_headers = array();
+	var $boundary;
+	var $is_multipart = false;
+	var $email_message;
 	
 	function message_part($part_data){
-		if (stristr($part_data,"Content-Type") !== false){
-			$this->content_type = explode("Content-Type:",$part_data,2);
-			$this->content_type = $this->content_type[1];
-			$this->content_type = explode(";",$this->content_type, 2);
-			$this->content_type = trim(str_replace('"',"",$this->content_type[0]));
-			$this->content_type = explode("/",$this->content_type, 2);
-			$this->content_subtype = strtolower($this->content_type[1]);
-			$this->content_type = strtolower($this->content_type[0]);
-		}
+		$part_parts = explode("\r\n\r\n",$part_data,2);
+		$headers = $part_parts[0];
 		
-		if (stristr($part_data,"Content-Disposition") !== false){
-			$this->content_disposition = explode("Content-Disposition:",$part_data,2);
-			$this->content_disposition = $this->content_disposition[1];
-			$this->content_disposition = explode(";",$this->content_disposition, 2);
-			$this->content_disposition = strtolower(trim(str_replace('"',"",$this->content_disposition[0])));
-		}
+		$this->parsed_headers = parse_headers($headers);
+		$this->boundary = get_boundary($this->parsed_headers["Content-Type"]);
 		
-		if (stristr($part_data,"Content-Transfer-Encoding") !== false){
-			$this->content_transfer_encoding = explode("Content-Transfer-Encoding:",$part_data,2);
-			$this->content_transfer_encoding = $this->content_transfer_encoding[1];
-			$this->content_transfer_encoding = explode("\n",$this->content_transfer_encoding, 2);
-			$this->content_transfer_encoding = strtolower(trim(str_replace('"',"",$this->content_transfer_encoding[0])));
-			
-			if ((strtolower($this->content_type) != "text") || ($this->content_disposition != '')){
-				$this->isfile = true;
-				$this->filename = explode("name=",$part_data,2);
-				$this->filename = $this->filename[1];
-				$this->filename = explode("\n",$this->filename, 2);
-				$this->filename = trim(str_replace('"',"",$this->filename[0]));
-			}
-		}
-		
-		if (stristr($part_data,"charset=") !== false){
-			$this->charset = explode("charset=",$part_data,2);
-			$this->charset = $this->charset[1];
-			$this->charset = explode("\n",$this->charset, 2);
-			$this->charset = trim(str_replace('"',"",$this->charset[0]));
-		}
-		
-		$part_data_parts = explode("\r\n\r\n", $part_data, 2);
-		
-		if (count($part_data_parts) == 2){
-			$this->data = trim($part_data_parts[1]);
+		if ($this->boundary != ''){
+			$this->is_multipart = true;
+			$this->email_message = new email_message($part_parts[0],$part_parts[1]);
 		}
 		else{
-			$this->data = $part_data;
-		}
-		
-		if (!$this->is_file){
-			if ($this->content_type == "text"){
-				$this->data = $this->clean_text($this->data);
+			if (stristr($part_data,"Content-Type") !== false){
+				$this->content_type = explode("Content-Type:",$part_data,2);
+				$this->content_type = $this->content_type[1];
+				$this->content_type = explode(";",$this->content_type, 2);
+				$this->content_type = trim(str_replace('"',"",$this->content_type[0]));
+				$this->content_type = explode("/",$this->content_type, 2);
+				$this->content_subtype = strtolower($this->content_type[1]);
+				$this->content_type = strtolower($this->content_type[0]);
 			}
 			
-			if ($this->content_subtype == "html"){
-				$this->data = $this->clean_html($this->data);
+			if (stristr($part_data,"Content-Disposition") !== false){
+				$this->content_disposition = explode("Content-Disposition:",$part_data,2);
+				$this->content_disposition = $this->content_disposition[1];
+				$this->content_disposition = explode(";",$this->content_disposition, 2);
+				$this->content_disposition = strtolower(trim(str_replace('"',"",$this->content_disposition[0])));
+			}
+			
+			if (stristr($part_data,"Content-Transfer-Encoding") !== false){
+				$this->content_transfer_encoding = explode("Content-Transfer-Encoding:",$part_data,2);
+				$this->content_transfer_encoding = $this->content_transfer_encoding[1];
+				$this->content_transfer_encoding = explode("\n",$this->content_transfer_encoding, 2);
+				$this->content_transfer_encoding = strtolower(trim(str_replace('"',"",$this->content_transfer_encoding[0])));
+				
+				if ((strtolower($this->content_type) != "text") || ($this->content_disposition != '')){
+					$this->isfile = true;
+					$this->filename = explode("name=",$part_data,2);
+					$this->filename = $this->filename[1];
+					$this->filename = explode("\n",$this->filename, 2);
+					$this->filename = trim(str_replace('"',"",$this->filename[0]));
+				}
+			}
+			
+			if (stristr($part_data,"charset=") !== false){
+				$this->charset = explode("charset=",$part_data,2);
+				$this->charset = $this->charset[1];
+				$this->charset = explode("\n",$this->charset, 2);
+				$this->charset = trim(str_replace('"',"",$this->charset[0]));
+			}
+			
+			$part_data_parts = explode("\r\n\r\n", $part_data, 2);
+			
+			if (count($part_data_parts) == 2){
+				$this->data = trim($part_data_parts[1]);
+			}
+			else{
+				$this->data = $part_data;
+			}
+			
+			if (!$this->is_file){
+				if ($this->content_type == "text"){
+					$this->data = $this->clean_text($this->data);
+				}
+				
+				if ($this->content_subtype == "html"){
+					$this->data = $this->clean_html($this->data);
+				}
 			}
 		}
 	}
@@ -288,7 +286,7 @@ class message_part {
 		$text = str_replace("=\n","",$text);
 		$text = str_replace("=\r","",$text);
 		
-		$temp_text = preg_replace("/=([0-8a-fA-f])([0-8a-fA-f])/Ui","%\\1\\2",$text);
+		$temp_text = preg_replace("/=([0-8a-fA-F])([0-8a-fA-F])/Ui","%\\1\\2",$text);
 		
 		if ($temp_text != $text){
 			$text = urldecode($temp_text);
@@ -319,6 +317,49 @@ class message_part {
 		
 		return $html;
 	}
+}
+
+function parse_headers($headers){
+	$parsed_headers = array();
+	$headers = preg_replace("/Message-ID/i","Message-ID", $headers);
+	$header_array = explode("\n",$headers);
+	
+	foreach($header_array as $line){
+		$headerstuff = explode(":", $line, 2);
+		$newheadertype = trim($headerstuff[0]);
+		$newheadervalue = trim($headerstuff[1]);
+		
+		if (!isset($parsed_headers[$newheadertype])){
+			if (ctype_upper(substr($newheadertype, 0, 1)) && count($headerstuff) == 2){
+				$headertype = $newheadertype;
+				$headervalue = $newheadervalue;
+				
+				if ((strtoupper($headertype) != "SUBJECT") && (strtoupper($headertype) != "CONTENT-TYPE")){
+					$headervalue = str_replace("'","",str_replace('"',"",$headervalue));
+				}
+				
+				$parsed_headers[$headertype] = $headervalue;
+			}
+			else{
+				$parsed_headers[$headertype] .= ' ' . trim($line);
+			}
+		}
+	}
+	
+	return $parsed_headers;
+}
+
+function get_boundary($headers){
+	if (stristr($headers, "boundary=") !== false){
+		$boundary = explodei("boundary=",$headers,2);
+		$boundary = $boundary[1];
+		$boundary = explode("\n",$boundary,2);
+		$boundary = $boundary[0];
+		$boundary = str_replace('"',"",$boundary);
+		$boundary = str_replace("'","",$boundary);
+	}
+	
+	return trim($boundary);
 }
 
 ?>

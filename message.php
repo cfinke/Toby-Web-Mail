@@ -30,8 +30,8 @@ $output = '
 				<div id="attachment">
 					'.$message["attachment"].'
 				</div>
-				<b>'.SEND_TO.': </b>'.$message["to"].'
-				<b>'.FROM.': </b>'.$message["from"].'<br />
+				<b>'.SEND_TO.': </b>'.htmlentities($message["to"]).'
+				<b>'.FROM.': </b>'.htmlentities($message["from"]).'<br />
 				<b>'.SUBJECT.': </b>'.$message["subject"].'
 			</div>
 			<div id="messagebody">
