@@ -127,26 +127,31 @@ function make_timestamp_from_date($date){
 	$result = run_query($query);
 	$user_timezone = mysql_result($result, 0, 'timezone');
 	
+	// The day of the week is optional. Check for it here, and remove it.
+	if (strstr($date, ",")){
+		$date = explode(",",$date);
+		$date = trim($date[1]);
+	}
+	
 	// Remove double spaces.
 	do {
 		$tempdate = str_replace("  "," ",trim($date));
 	} while (($tempdate != $date) && ($date = $tempdate));
 	
-	$date = str_replace(",","",$date);
 	$dateparts = explode(" ",$date);
-	$year = $dateparts[3];
-	$month = $month_key[strtolower($dateparts[2])];
-	$day = $dateparts[1];
+	$year = $dateparts[2];
+	$month = $month_key[strtolower($dateparts[1])];
+	$day = $dateparts[0];
 	
-	$timeparts = explode(":",$dateparts[4]);
+	$timeparts = explode(":",$dateparts[3]);
 	$hour = $timeparts[0];
 	$minute = $timeparts[1];
 	$second = $timeparts[2];
 	
 	$unix_time = mktime($hour, $minute, $second, $month, $day, $year);
 	
-	$timezone = substr($dateparts[5],1,4);
-	$operator = (substr($dateparts[5],0,1) == "-") ? "+" : "-";	
+	$timezone = substr($dateparts[4],1,4);
+	$operator = (substr($dateparts[4],0,1) == "-") ? "+" : "-";	
 	$adjustment = ($timezone / 100) * 3600;	
 	$xxx = eval("\$unix_time $operator= \$adjustment;");
 	
