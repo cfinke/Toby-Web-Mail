@@ -1,0 +1,21 @@
+2004/05/13
+Removed the $this->body variable from the email_message class.
+
+2004/05/16
+Now writes original message to database and does formatting on display side to avoid losing data.
+
+2004/05/17
+Changed line length in reply emails to 64-74 characters.
+Added ability to specify how often Toby refreshes the Inbox.
+Added a javascript alert when there is new mail on a refresh.
+Removed the requirement that the entire Toby directory be writable by the server.
+Fixed bug where HTML part of body would not be displayed for certain multipart messages. (In export_html_body, $body was being reassigned after the html body had been found.)
+Fixed bug in email_message class where first paragraph of plain text e-mails was being deleted.  This is due to the addition of using the email_message class for non-multipart e-mails, so it thought the first paragraph was the headers
+Removed re-definition of TRANSFER_EMAIL.
+
+2004/05/18
+Changed error reporting to PHPs default.
+Fixed behavior of reply/replytoall/forward buttons when no message had been read
+Added default config file.
+Fixed behavior of reply/replytoall/forward buttons when no message had been read.
+Re-wrote the upgrade script to mimic the install script.  Made more changes to fix the whole config.php problem.
