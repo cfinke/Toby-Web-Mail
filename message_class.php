@@ -283,10 +283,16 @@ class message_part {
 	}
 	
 	function clean_text($text){
-		$text = str_replace("=3D","=",$text);
-		$text = str_replace("=\n","\n",$text);
-		$text = str_replace("=\r","\r",$text);
-		$text = str_replace("=20","",$text);
+		$text = str_replace("=\n\r","=\n",$text);
+		$text = str_replace("=\r\n","=\r",$text);
+		$text = str_replace("=\n","",$text);
+		$text = str_replace("=\r","",$text);
+		
+		$temp_text = preg_replace("/=([0-8a-fA-f])([0-8a-fA-f])/Ui","%\\1\\2",$text);
+		
+		if ($temp_text != $text){
+			$text = urldecode($temp_text);
+		}
 		
 		return $text;
 	}
