@@ -1,3 +1,8 @@
+WARNING: DO NOT USE
+===================
+This code was written many years ago, before I knew about concepts such
+as XSS protection or database query sanitization.  Do not use this code.
+
 README FOR TOBY WEB MAIL 0.5.1
 ==============================
 
